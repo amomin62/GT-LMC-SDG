@@ -1,0 +1,10 @@
+{
+  "name": "gt-lmc-sdg",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Georgia Tech sustainability campaign website",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  }
+}
