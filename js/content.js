@@ -23,7 +23,8 @@
  *   media/our-video.mp4                             (a file saved in this project)
  *
  * Quiz: every option has an orgId. It must match one of the organization ids
- * below (org-1, org-2, org-3, org-4). The organization picked most often wins.
+ * below (horizons-atlanta, inspiredu-atl, org-3, org-4). The organization
+ * picked most often wins.
  *
  * Sustainability Next priorities (use the official names):
  *   Institute Operations · Education for Sustainable Development ·
@@ -88,26 +89,26 @@ window.SITE = {
     intro: "[Introduce the four organizations. Say what they have in common and how a reader should choose among them.]",
     items: [
       {
-        id: "org-1",
-        name: "[Organization 1]",
-        tagline: "[One line on what they do]",
-        about: "[What the organization is, who runs it, and what it works on.]",
-        why: "[Why this organization matters to your audience specifically.]",
-        involve: "[How to get involved: a meeting, an event, a form, a volunteer shift.]",
-        href: "",
-        hrefLabel: "Visit their site",
-        tags: ["SDG 4: Quality Education", "Education for Sustainable Development"]
+        id: "horizons-atlanta",
+        name: "Horizons Atlanta",
+        tagline: "Independent Atlanta Nonprofit",
+        about: "Horizons Atlanta is a non-profit organization that offers free summer learning and academic assistance to students from disadvantaged communities. The organization concentrates on literacy, STEM education, enrichment, and personal growth. Individuals interested in volunteering and partnering with Horizons Atlanta are encouraged to find out more.",
+        why: "Horizons Atlanta is important for Georgia Tech students in that it strives to foster education equity in Atlanta and has a program at the Georgia Tech campus. Students who are interested in education, technology, and community outreach can investigate how to help out the kids around here.",
+        involve: "Visit the Horizons Atlanta website to explore volunteer opportunities and learn how to support educational programs for underserved students.",
+        href: "https://www.horizonsatlanta.org/",
+        hrefLabel: "Visit the organization",
+        tags: ["UN SDG 4: Quality Education", "Education for Sustainable Development"]
       },
       {
-        id: "org-2",
-        name: "[Organization 2]",
-        tagline: "[One line on what they do]",
-        about: "[What the organization is, who runs it, and what it works on.]",
-        why: "[Why this organization matters to your audience specifically.]",
-        involve: "[How to get involved: a meeting, an event, a form, a volunteer shift.]",
-        href: "",
-        hrefLabel: "Visit their site",
-        tags: ["SDG 4: Quality Education", "Education for Sustainable Development"]
+        id: "inspiredu-atl",
+        name: "Inspiredu",
+        tagline: "Atlanta Community Nonprofit",
+        about: "Inspiredu attempts to reduce the digital divide through supplying underserved communities with computers, teaching digital literacy and computer technology. Volunteer opportunities include working as a facilitator for a digital literacy workshop or preparing and refurbishing laptops.",
+        why: "Inspiredu is very applicable to Georgia Tech students since it combines technology, education, and community service. This means that students can use their technology expertise to assist families in gaining access to online materials.",
+        involve: "Check out Inspiredu’s website for digital literacy and technology related volunteering opportunities.",
+        href: "https://www.iuatl.org/",
+        hrefLabel: "Visit the organization",
+        tags: ["UN SDG 4: Quality Education", "Education for Sustainable Development"]
       },
       {
         id: "org-3",
@@ -118,7 +119,7 @@ window.SITE = {
         involve: "[How to get involved: a meeting, an event, a form, a volunteer shift.]",
         href: "",
         hrefLabel: "Visit their site",
-        tags: ["SDG 4: Quality Education", "Education for Sustainable Development"]
+        tags: ["UN SDG 4: Quality Education", "Education for Sustainable Development"]
       },
       {
         id: "org-4",
@@ -129,7 +130,7 @@ window.SITE = {
         involve: "[How to get involved: a meeting, an event, a form, a volunteer shift.]",
         href: "",
         hrefLabel: "Visit their site",
-        tags: ["SDG 4: Quality Education", "Education for Sustainable Development"]
+        tags: ["UN SDG 4: Quality Education", "Education for Sustainable Development"]
       }
     ]
   },
@@ -141,8 +142,8 @@ window.SITE = {
       {
         prompt: "[Question 1, e.g. How much time do you have this semester?]",
         options: [
-          { label: "[Answer]", orgId: "org-1" },
-          { label: "[Answer]", orgId: "org-2" },
+          { label: "[Answer]", orgId: "horizons-atlanta" },
+          { label: "[Answer]", orgId: "inspiredu-atl" },
           { label: "[Answer]", orgId: "org-3" },
           { label: "[Answer]", orgId: "org-4" }
         ]
@@ -150,10 +151,10 @@ window.SITE = {
       {
         prompt: "[Question 2, e.g. What kind of work sounds most like you?]",
         options: [
-          { label: "[Answer]", orgId: "org-2" },
+          { label: "[Answer]", orgId: "inspiredu-atl" },
           { label: "[Answer]", orgId: "org-3" },
           { label: "[Answer]", orgId: "org-4" },
-          { label: "[Answer]", orgId: "org-1" }
+          { label: "[Answer]", orgId: "horizons-atlanta" }
         ]
       },
       {
@@ -161,8 +162,8 @@ window.SITE = {
         options: [
           { label: "[Answer]", orgId: "org-3" },
           { label: "[Answer]", orgId: "org-4" },
-          { label: "[Answer]", orgId: "org-1" },
-          { label: "[Answer]", orgId: "org-2" }
+          { label: "[Answer]", orgId: "horizons-atlanta" },
+          { label: "[Answer]", orgId: "inspiredu-atl" }
         ]
       }
     ]
