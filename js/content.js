@@ -74,8 +74,8 @@ window.SITE = {
 
   video: {
     heading: "Watch",
-    title: "[Video title]",
-    url: "",
+    title: "Inclusive Education – Education Equity Now",
+    url: "https://www.youtube.com/watch?v=8HPh4RoV63s",
     caption: "[Tell the viewer what to notice and why this video belongs on the page. Say who made it.]",
     transcript: "[Paste a short transcript, or say where captions are available.]"
   },
