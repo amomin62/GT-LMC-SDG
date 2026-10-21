@@ -13,7 +13,7 @@
  *   2. Issue        the problem, three figures, UN SDG + Sustainability Next
  *   3. Video        YouTube, Vimeo, Google Drive, or a video file in the folder
  *   4. Organizations  exactly the four groups you are promoting
- *   5. Find your fit  placeholder for the interactive part
+ *   5. Find your fit  quiz. Result keys match organization ids, plus "tie".
  *
  * Video: paste the link into video.url. These all work:
  *   https://www.youtube.com/watch?v=VIDEO_ID
@@ -133,7 +133,103 @@ window.SITE = {
 
   interactive: {
     heading: "Find your fit",
-    placeholder: "[Interactive part]"
+    intro: "Answer four questions about how you want to help. You will get a match, Horizons Atlanta or Inspiredu, and a specific page where a Georgia Tech student can volunteer.",
+    restartLabel: "Retake the quiz",
+    questions: [
+      {
+        prompt: "How do you want to spend the hour?",
+        options: [
+          {
+            label: "With a student, teaching or tutoring",
+            scores: { "horizons-atlanta": 2 }
+          },
+          {
+            label: "With hardware and software, so a family can get online",
+            scores: { "inspiredu-atl": 2 }
+          },
+          {
+            label: "Wherever a team can use me soonest",
+            scores: { "horizons-atlanta": 1, "inspiredu-atl": 1 }
+          }
+        ]
+      },
+      {
+        prompt: "Which fact on this page do you want to work on?",
+        options: [
+          {
+            label: "Too few Atlanta students are reading on grade level",
+            scores: { "horizons-atlanta": 2 }
+          },
+          {
+            label: "Households without home internet cannot reach homework or job training",
+            scores: { "inspiredu-atl": 2 }
+          },
+          {
+            label: "Both. One gap feeds the other.",
+            scores: { "horizons-atlanta": 1, "inspiredu-atl": 1 }
+          }
+        ]
+      },
+      {
+        prompt: "What can you bring this month?",
+        options: [
+          {
+            label: "Patience to explain an idea until it clicks",
+            scores: { "horizons-atlanta": 2 }
+          },
+          {
+            label: "Comfort fixing a laptop or coaching someone through an app",
+            scores: { "inspiredu-atl": 2 }
+          },
+          {
+            label: "A steady hour. I can learn the rest on site.",
+            scores: { "horizons-atlanta": 1, "inspiredu-atl": 1 }
+          }
+        ]
+      },
+      {
+        prompt: "When can you show up?",
+        options: [
+          {
+            label: "Summer, when school is out and learning loss grows",
+            scores: { "horizons-atlanta": 2 }
+          },
+          {
+            label: "A workshop or a weekend during the semester",
+            scores: { "inspiredu-atl": 2 }
+          },
+          {
+            label: "The first opening either group has",
+            scores: { "horizons-atlanta": 1, "inspiredu-atl": 1 }
+          }
+        ]
+      }
+    ],
+    results: {
+      "horizons-atlanta": {
+        title: "Horizons Atlanta fits how you want to help.",
+        body: "Your answers point to time with students: teaching, reading, and the months when school is out. Horizons at Georgia Tech serves about 240 rising 1st through 9th graders with reading support, STEAM, and enrichment, on campus in the summer and during the school year. Fill out the volunteer interest form and say you are a Georgia Tech student. That hour is how you put SDG 4 into practice in the city you study in.",
+        links: [
+          { label: "Open the volunteer form", href: "https://www.horizonsatlanta.org/about/volunteer-with-us/" },
+          { label: "See Horizons at Georgia Tech", href: "https://www.horizonsatlanta.org/our-region/georgia-tech/" }
+        ]
+      },
+      "inspiredu-atl": {
+        title: "Inspiredu fits how you want to help.",
+        body: "Your answers point to the technology side of the same gap: computers, internet, and families shut out of homework and training. Digital Skills Volunteers support Inspiredu workshops, in person or online. Tech Team volunteers clean and reimage the laptops those programs give out. Open the volunteer page and pick the role that matches the hour you have.",
+        links: [
+          { label: "See Inspiredu volunteer roles", href: "https://www.iuatl.org/volunteer" }
+        ]
+      },
+      tie: {
+        title: "Start with either organization. Then come back for the other.",
+        body: "Your answers split between teaching and technology, and Atlanta needs both. Only 35.7 percent of Atlanta Public Schools students in grades 3–8 scored proficient or above in English, and about one Atlanta household in twelve has no home internet. Contact the group you can reach this week. Use the other link after that first hour is on your calendar.",
+        links: [
+          { label: "Horizons Atlanta volunteer form", href: "https://www.horizonsatlanta.org/about/volunteer-with-us/" },
+          { label: "Inspiredu volunteer page", href: "https://www.iuatl.org/volunteer" }
+        ]
+      }
+    }
   },
 
   footer: {

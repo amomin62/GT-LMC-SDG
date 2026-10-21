@@ -10,6 +10,10 @@
   }
 
   const orgs = site.organizations.items || [];
+  const quiz = site.interactive || {};
+  const quizQuestions = quiz.questions || [];
+  let quizStep = 0;
+  let quizAnswers = [];
 
   document.title = plain(site.campaign.title) + " · " + plain(site.org.name);
 
@@ -22,6 +26,7 @@
   ].join("");
 
   updateWordCount();
+  renderQuiz(false);
   document.addEventListener("click", onClick);
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") closeMenu();
@@ -189,15 +194,98 @@
   }
 
   function interactiveSection() {
+    const intro = quiz.intro ? `<p class="section-intro">${esc(quiz.intro)}</p>` : "";
     return `
       <section class="section" id="fit">
         <div class="wrap">
-          ${sectionHead("04", site.interactive.heading)}
-          <div class="interactive-placeholder">
-            <strong>${esc(site.interactive.placeholder)}</strong>
-          </div>
+          ${sectionHead("04", quiz.heading || "Find your fit")}
+          ${intro}
+          <div id="quiz" class="quiz" aria-live="polite"></div>
         </div>
       </section>`;
+  }
+
+  function renderQuiz(moveFocus) {
+    const root = document.querySelector("#quiz");
+    if (!root) return;
+    if (!quizQuestions.length) {
+      root.innerHTML = `<div class="quiz-card"><p>Add quiz questions under interactive.questions in js/content.js.</p></div>`;
+      return;
+    }
+    root.innerHTML = quizStep >= quizQuestions.length ? quizResultHtml() : quizQuestionHtml();
+    if (!moveFocus) return;
+    const heading = document.getElementById("quiz-prompt");
+    if (heading) heading.focus();
+  }
+
+  function quizQuestionHtml() {
+    const question = quizQuestions[quizStep];
+    const options = (question.options || []).map((option, index) => `
+      <button type="button" class="quiz-option" data-action="quiz-option" data-index="${index}">
+        <span class="quiz-letter" aria-hidden="true">${String.fromCharCode(65 + index)}</span>
+        <span>${esc(option.label)}</span>
+      </button>`).join("");
+    const back = quizStep > 0
+      ? `<button type="button" class="btn btn-line" data-action="quiz-back">Back</button>`
+      : "";
+    const width = Math.round((quizStep / quizQuestions.length) * 100);
+    return quizFrame(
+      `Question ${quizStep + 1} of ${quizQuestions.length}`,
+      width,
+      `<h3 id="quiz-prompt" tabindex="-1">${esc(question.prompt)}</h3>
+       <div class="quiz-options" role="group" aria-labelledby="quiz-prompt">${options}</div>`,
+      back
+    );
+  }
+
+  function quizResultHtml() {
+    const winner = quizWinner();
+    const results = quiz.results || {};
+    const copy = results[winner] || results.tie;
+    if (!copy) {
+      return `<div class="quiz-card"><p>Add a result for this match under interactive.results in js/content.js.</p></div>`;
+    }
+    const links = (copy.links || []).map((link) => actionLink(link.href, link.label)).join("");
+    const back = `<button type="button" class="btn btn-line" data-action="quiz-back">Back</button>`;
+    const restart = `<button type="button" class="btn btn-line" data-action="quiz-restart">${esc(quiz.restartLabel || "Retake the quiz")}</button>`;
+    return quizFrame(
+      "Your match",
+      100,
+      `<h3 id="quiz-prompt" tabindex="-1">${esc(copy.title)}</h3>
+       <p class="quiz-body">${esc(copy.body)}</p>`,
+      links + back + restart
+    );
+  }
+
+  function quizFrame(status, width, body, actions) {
+    return `
+      <div class="quiz-card">
+        <p class="quiz-status" id="quiz-progress">${esc(status)}</p>
+        <div class="quiz-bar" aria-hidden="true"><span style="width:${width}%"></span></div>
+        ${body}
+        <div class="quiz-actions">${actions}</div>
+      </div>`;
+  }
+
+  function quizWinner() {
+    const totals = {};
+    quizAnswers.forEach((answer) => {
+      const question = quizQuestions[answer.step];
+      const option = question && question.options && question.options[answer.index];
+      if (!option) return;
+      Object.entries(option.scores || {}).forEach(([id, points]) => {
+        totals[id] = (totals[id] || 0) + (Number(points) || 0);
+      });
+    });
+    const ranked = Object.entries(totals).sort((a, b) => b[1] - a[1]);
+    if (!ranked.length || (ranked.length > 1 && ranked[0][1] === ranked[1][1])) return "tie";
+    return ranked[0][0];
+  }
+
+  function actionLink(href, label) {
+    const safe = safeUrl(href);
+    if (!safe || !label) return "";
+    return `<a class="btn btn-navy" href="${esc(safe)}" target="_blank" rel="noopener">${esc(label)}</a>`;
   }
 
   function footer() {
@@ -228,6 +316,31 @@
       sessionStorage.setItem("gtsdg-hide-banner", "1");
       const bar = document.querySelector(".template-banner");
       if (bar) bar.remove();
+      return;
+    }
+
+    if (action === "quiz-option") {
+      const index = Number(button.dataset.index);
+      const question = quizQuestions[quizStep];
+      if (!question || !question.options || !question.options[index]) return;
+      quizAnswers.push({ step: quizStep, index });
+      quizStep += 1;
+      renderQuiz(true);
+      return;
+    }
+
+    if (action === "quiz-back") {
+      if (quizStep === 0) return;
+      quizStep -= 1;
+      quizAnswers = quizAnswers.filter((answer) => answer.step < quizStep);
+      renderQuiz(true);
+      return;
+    }
+
+    if (action === "quiz-restart") {
+      quizStep = 0;
+      quizAnswers = [];
+      renderQuiz(true);
     }
   }
 
