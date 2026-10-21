@@ -107,25 +107,25 @@ window.SITE = {
         tags: ["UN SDG 4: Quality Education", "Education for Sustainable Development"]
       },
       {
-        id: "org-3",
-        name: "[Organization 3]",
-        tagline: "[One line on what they do]",
-        about: "[What the organization is, who runs it, and what it works on.]",
-        why: "[Why this organization matters to your audience specifically.]",
-        involve: "[How to get involved: a meeting, an event, a form, a volunteer shift.]",
-        href: "",
-        hrefLabel: "Visit their site",
+        id: "bbbs-atlanta",
+        name: "Big Brothers Big Sisters of Metro Atlanta",
+        tagline: "Atlanta Youth Mentoring Nonprofit",
+        about: "Big Brothers Big Sisters of Metro Atlanta is a nonprofit organization that connects children and teens with adult volunteer mentors. The organization supports one-to-one relationships that help young people build confidence and explore their interests. Mentors and youth spend time together through activities such as reading, visiting the library, and exploring the community.",
+        why: "Big Brothers Big Sisters is relevant to Georgia Tech students since it combines mentoring, learning, and community service. Students who are interested in working with young people can share their experiences with education and college while becoming a consistent source of encouragement for a child in metro Atlanta.",
+        involve: "Visit the organization’s website to review mentor requirements and sign up for a Big Orientation. Volunteers commit to meeting with their mentee at least twice a month for at least one year.",
+        href: "https://bbbsatl.org/be-a-big/",
+        hrefLabel: "Visit the organization",
         tags: ["UN SDG 4: Quality Education", "Education for Sustainable Development"]
       },
       {
-        id: "org-4",
-        name: "[Organization 4]",
-        tagline: "[One line on what they do]",
-        about: "[What the organization is, who runs it, and what it works on.]",
-        why: "[Why this organization matters to your audience specifically.]",
-        involve: "[How to get involved: a meeting, an event, a form, a volunteer shift.]",
-        href: "",
-        hrefLabel: "Visit their site",
+        id: "boys-girls-clubs-atlanta",
+        name: "Boys & Girls Clubs of Metro Atlanta",
+        tagline: "Atlanta Youth Development Nonprofit",
+        about: "Boys & Girls Clubs of Metro Atlanta provides safe and supportive spaces for children and teens outside of school hours. The organization focuses on academic success, healthy lifestyles, and character and leadership development. Individual volunteers assist staff with after-school programs and activities, while groups can support events and school supply drives.",
+        why: "Boys & Girls Clubs is important for Georgia Tech students because it connects education with opportunities to support young people in the Atlanta community. Students interested in education, leadership, and community outreach can help with Club activities while encouraging children and teens to keep learning beyond the classroom.",
+        involve: "Check out the organization’s volunteer page to explore individual and group opportunities. Individual volunteers begin with a VolunteerHub profile and complete background screening, required training, and orientation before serving at a Club.",
+        href: "https://bgcma.org/get-involved/volunteer/",
+        hrefLabel: "Visit the organization",
         tags: ["UN SDG 4: Quality Education", "Education for Sustainable Development"]
       }
     ]
@@ -233,7 +233,7 @@ window.SITE = {
   },
 
   footer: {
-    close: "[Closing line in your organization’s voice. Repeat the invitation in one sentence.]",
+    close: "Join ATLearn in opening doors to education across Atlanta: teach, mentor, or volunteer.",
     credits: "[Names, course, and term]",
     note: "Student campaign for the Georgia Tech community. This page is not an official Georgia Tech site."
   }
