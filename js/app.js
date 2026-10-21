@@ -10,7 +10,6 @@
   }
 
   const orgs = site.organizations.items || [];
-  const quiz = { step: 0, answers: [] };
 
   document.title = plain(site.campaign.title) + " · " + plain(site.org.name);
 
@@ -194,67 +193,11 @@
       <section class="section" id="fit">
         <div class="wrap">
           ${sectionHead("04", site.interactive.heading)}
-          <p class="section-intro">${esc(site.interactive.intro)}</p>
-          <div class="quiz" id="quiz" aria-live="polite">${quizHtml()}</div>
+          <div class="interactive-placeholder">
+            <strong>${esc(site.interactive.placeholder)}</strong>
+          </div>
         </div>
       </section>`;
-  }
-
-  function quizHtml() {
-    const questions = site.interactive.questions || [];
-    if (quiz.step >= questions.length) return quizResult();
-    const question = questions[quiz.step];
-    const dots = questions.map((_, i) => `<span class="dot ${i < quiz.step ? "is-done" : ""} ${i === quiz.step ? "is-now" : ""}"></span>`).join("");
-    const options = question.options.map((option, i) => `
-      <button class="option" type="button" data-action="answer" data-index="${i}">${esc(option.label)}</button>`).join("");
-    return `
-      <div class="quiz-top">
-        <p class="progress">Question ${quiz.step + 1} of ${questions.length}</p>
-        <div class="dots" aria-hidden="true">${dots}</div>
-      </div>
-      <h3 tabindex="-1">${esc(question.prompt)}</h3>
-      <div class="options">${options}</div>
-      ${quiz.step > 0 ? `<button class="btn btn-line quiz-back" type="button" data-action="quiz-back">Back</button>` : ""}`;
-  }
-
-  function quizResult() {
-    const scores = {};
-    quiz.answers.forEach((answer) => {
-      scores[answer.orgId] = (scores[answer.orgId] || 0) + 1;
-    });
-    let bestId = "";
-    let bestScore = -1;
-    quiz.answers.forEach((answer) => {
-      if (scores[answer.orgId] >= bestScore) {
-        bestId = answer.orgId;
-        bestScore = scores[answer.orgId];
-      }
-    });
-    const org = orgs.find((item) => item.id === bestId);
-
-    if (!org) {
-      return `
-        <h3 tabindex="-1">Link the answers to an organization</h3>
-        <p>The quiz picked “${esc(bestId)}”, which is not an organization id. Match each option’s orgId to an id in js/content.js.</p>
-        <button class="btn btn-line" type="button" data-action="quiz-reset">Start over</button>`;
-    }
-
-    const href = safeUrl(org.href);
-    return `
-      <div class="result">
-        <p class="progress">Your match</p>
-        <h3 tabindex="-1">${esc(org.name)}</h3>
-        <p class="tagline">${esc(org.tagline)}</p>
-        <p>${esc(org.why)}</p>
-        <p class="label">Your first step</p>
-        <p>${esc(org.involve)}</p>
-        <div class="hero-actions">
-          ${href
-            ? `<a class="btn btn-navy" href="${esc(href)}" target="_blank" rel="noopener">${esc(org.hrefLabel || "Visit")}</a>`
-            : `<a class="btn btn-navy" href="#${esc(org.id)}">Read about them</a>`}
-          <button class="btn btn-line" type="button" data-action="quiz-reset">Start over</button>
-        </div>
-      </div>`;
   }
 
   function footer() {
@@ -285,27 +228,7 @@
       sessionStorage.setItem("gtsdg-hide-banner", "1");
       const bar = document.querySelector(".template-banner");
       if (bar) bar.remove();
-    } else if (action === "answer") {
-      const question = site.interactive.questions[quiz.step];
-      quiz.answers = quiz.answers.slice(0, quiz.step);
-      quiz.answers.push(question.options[Number(button.dataset.index)]);
-      quiz.step += 1;
-      renderQuiz();
-    } else if (action === "quiz-back") {
-      quiz.step = Math.max(0, quiz.step - 1);
-      renderQuiz();
-    } else if (action === "quiz-reset") {
-      quiz.step = 0;
-      quiz.answers = [];
-      renderQuiz();
     }
-  }
-
-  function renderQuiz() {
-    const box = document.getElementById("quiz");
-    box.innerHTML = quizHtml();
-    const heading = box.querySelector("h3");
-    if (heading) heading.focus({ preventScroll: true });
   }
 
   function sectionHead(index, title) {
@@ -321,7 +244,7 @@
   }
 
   function updateWordCount() {
-    const skip = new Set(["id", "href", "url", "orgId", "hrefLabel"]);
+    const skip = new Set(["id", "href", "url", "hrefLabel"]);
     let count = 0;
     function walk(node, key, parentKey) {
       if (typeof node === "string") {

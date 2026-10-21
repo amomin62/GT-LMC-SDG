@@ -13,7 +13,7 @@
  *   2. Issue        the problem, three figures, UN SDG + Sustainability Next
  *   3. Video        YouTube, Vimeo, Google Drive, or a video file in the folder
  *   4. Organizations  exactly the four groups you are promoting
- *   5. Find your fit  a short quiz that recommends one of the four
+ *   5. Find your fit  placeholder for the interactive part
  *
  * Video: paste the link into video.url. These all work:
  *   https://www.youtube.com/watch?v=VIDEO_ID
@@ -21,10 +21,6 @@
  *   https://vimeo.com/123456789
  *   https://drive.google.com/file/d/FILE_ID/view   (share as “Anyone with the link”)
  *   media/our-video.mp4                             (a file saved in this project)
- *
- * Quiz: every option has an orgId. It must match one of the organization ids
- * below (horizons-atlanta, inspiredu-atl, org-3, org-4). The organization
- * picked most often wins.
  *
  * Sustainability Next priorities (use the official names):
  *   Institute Operations · Education for Sustainable Development ·
@@ -49,7 +45,7 @@ window.SITE = {
   issue: {
     heading: "The issue",
     paragraphs: [
-      "Access to education means more than having a school nearby. It means a qualified teacher in every classroom, books at home, reliable internet, a safe way to get to class, and a second chance for adults who never finished school. In Atlanta, those things are spread unevenly. Some neighborhoods have tutors, enrichment programs, and college counselors. Others, a few miles away, have very little. The gap shows up early, in how well children can read by the end of elementary school, and it follows them into adulthood: metro Atlanta ranks last among the 50 largest U.S. metros for how often children born into low-income families climb the economic ladder.",
+      "Access to education means more than having a school nearby. It means a qualified teacher in every classroom, books at home, reliable internet, a safe way to get to class, and a second chance for adults who never finished school. In Atlanta, those things are spread unevenly. Some neighborhoods have tutors, enrichment programs, and college counselors. Others, a few miles away, have very little. The gap shows up early, in how well children can read by the end of elementary school, and in Atlanta the reading gap between children from low-income families and their classmates is wider than in other large U.S. cities.",
       "This is not happening somewhere far away. English Avenue and Vine City sit just west of campus, and a recent study of Atlanta’s Westside found that more than half of the children there live below the federal poverty line. Georgia Tech students spend four years building exactly what these neighborhoods are short on: strong reading, math, and science skills, mentors who have been through college, and a clear path to get there. An hour a week tutoring a middle schooler, a Saturday coding workshop, or helping an adult prepare for the GED turns your education into something you share. It works both ways, too. You build communication and leadership skills no class can teach, and you get to know the city you live in beyond the edge of campus."
     ],
     stats: [
@@ -59,14 +55,14 @@ window.SITE = {
         source: "Georgia Milestones results, Atlanta Public Schools, 2023–24"
       },
       {
-        figure: "4.5%",
-        label: "chance that a child raised in the bottom fifth of incomes in metro Atlanta reaches the top fifth as an adult",
-        source: "Chetty et al., Equality of Opportunity Project, 2014"
+        figure: "60 points",
+        label: "gap in 4th-grade reading scores between Atlanta Public Schools students from low-income families and their classmates, wider than in other large U.S. cities, Georgia, or the nation",
+        source: "National Assessment of Educational Progress (The Nation’s Report Card), 2024"
       },
       {
-        figure: "50th of 50",
-        label: "metro Atlanta’s rank among the largest U.S. metros for upward mobility of children from low-income families",
-        source: "Opportunity Insights, 2024, reported by Axios Atlanta"
+        figure: "1 in 12",
+        label: "Atlanta households has no home broadband internet subscription, cutting families off from homework, online classes, and job training",
+        source: "U.S. Census Bureau, American Community Survey 2020–2024"
       }
     ],
     sdgs: [
@@ -137,36 +133,7 @@ window.SITE = {
 
   interactive: {
     heading: "Find your fit",
-    intro: "[A one-sentence invitation: answer three questions and we will point you to one of the four organizations.]",
-    questions: [
-      {
-        prompt: "[Question 1, e.g. How much time do you have this semester?]",
-        options: [
-          { label: "[Answer]", orgId: "horizons-atlanta" },
-          { label: "[Answer]", orgId: "inspiredu-atl" },
-          { label: "[Answer]", orgId: "org-3" },
-          { label: "[Answer]", orgId: "org-4" }
-        ]
-      },
-      {
-        prompt: "[Question 2, e.g. What kind of work sounds most like you?]",
-        options: [
-          { label: "[Answer]", orgId: "inspiredu-atl" },
-          { label: "[Answer]", orgId: "org-3" },
-          { label: "[Answer]", orgId: "org-4" },
-          { label: "[Answer]", orgId: "horizons-atlanta" }
-        ]
-      },
-      {
-        prompt: "[Question 3, e.g. Where would you rather make a difference?]",
-        options: [
-          { label: "[Answer]", orgId: "org-3" },
-          { label: "[Answer]", orgId: "org-4" },
-          { label: "[Answer]", orgId: "horizons-atlanta" },
-          { label: "[Answer]", orgId: "inspiredu-atl" }
-        ]
-      }
-    ]
+    placeholder: "[Interactive part]"
   },
 
   footer: {
