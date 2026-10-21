@@ -145,28 +145,28 @@ window.SITE = {
 
   resources: [
     {
-      id: "program-1",
-      kind: "Program",
-      name: "[Program name]",
-      organizer: "[Who runs it]",
-      summary: "[What the program is, who it is for, and what a person does when they show up.]",
-      why: "[Why this program is relevant to your audience, in this moment.]",
-      action: "[The specific next step: a meeting, a form, a shift, a class.]",
-      href: "",
-      hrefLabel: "Visit the program",
-      tags: ["[UN SDG]", "[Sustainability Next priority]"]
+      id: "horizons-atlanta",
+      kind: "Organization",
+      name: "Horizons Atlanta",
+      organizer: "Independent Atlanta Nonprofit",
+      summary: "Horizons Atlanta is a non-profit organization that offers free summer learning and academic assistance to students from disadvantaged communities. The organization concentrates on literacy, STEM education, enrichment, and personal growth. Individuals interested in volunteering and partnering with Horizons Atlanta are encouraged to find out more.",
+      why: "Horizons Atlanta is important for Georgia Tech students in that it strives to foster education equity in Atlanta and has a program at the Georgia Tech campus. Students who are interested in education, technology, and community outreach can investigate how to help out the kids around here.",
+      action: "Visit the Horizons Atlanta website to explore volunteer opportunities and learn how to support educational programs for underserved students.",
+      href: "https://www.horizonsatlanta.org/",
+      hrefLabel: "Visit the organization",
+      tags: ["UN SDG 4: Quality Education", "Education for Sustainable Development"]
     },
     {
-      id: "org-1",
+      id: "inspiredu-atl",
       kind: "Organization",
-      name: "[Organization name]",
-      organizer: "[Campus or community home]",
-      summary: "[What the organization works on and how a new person can join or use it.]",
-      why: "[Why this organization is a fit for the audience you named above.]",
-      action: "[The specific next step.]",
-      href: "",
+      name: "Inspiredu",
+      organizer: "Atlanta Community Nonprofit",
+      summary: "Inspiredu attempts to reduce the digital divide through supplying underserved communities with computers, teaching digital literacy and computer technology. Volunteer opportunities include working as a facilitator for a digital literacy workshop or preparing and refurbishing laptops.",
+      why: "Inspiredu is very applicable to Georgia Tech students since it combines technology, education, and community service. This means that students can use their technology expertise to assist families in gaining access to online materials.",
+      action: "Check out Inspiredu’s website for digital literacy and technology related volunteering opportunities.",
+      href: "https://www.iuatl.org/",
       hrefLabel: "Visit the organization",
-      tags: ["[UN SDG]", "[Sustainability Next priority]"]
+      tags: ["UN SDG 4: Quality Education", "Education for Sustainable Development"]
     },
     {
       id: "resource-1",
