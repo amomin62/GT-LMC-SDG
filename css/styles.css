@@ -211,7 +211,7 @@ main { padding-bottom: 4rem; }
 }
 .section-intro { max-width: 44rem; color: var(--muted); margin: -0.3rem 0 1.5rem; }
 
-.card, .stat, .fit-box, .video-copy, .org, .quiz {
+.card, .stat, .fit-box, .video-copy, .org {
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -279,7 +279,7 @@ main { padding-bottom: 4rem; }
   margin-left: 3px;
 }
 .video-copy { padding: 1.2rem; }
-.video-copy h3, .org h3, .quiz h3 {
+.video-copy h3, .org h3 {
   margin: 0 0 0.35rem;
   font-family: var(--serif);
   font-weight: 600;
@@ -321,28 +321,19 @@ main { padding-bottom: 4rem; }
 .tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
 .tag { background: var(--gold-wash); color: var(--navy); border-radius: 999px; padding: 0.15rem 0.6rem; font-size: 0.8rem; }
 
-/* Quiz */
-.quiz { padding: 1.5rem; max-width: 46rem; }
-.quiz-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 0.5rem; }
-.progress { margin: 0; color: var(--gold-deep); font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; }
-.dots { display: flex; gap: 0.35rem; }
-.dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--line); }
-.dot.is-done { background: var(--gold); }
-.dot.is-now { background: var(--navy); }
-.quiz h3 { font-size: 1.35rem; margin-bottom: 1rem; }
-.options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.55rem; }
-.option {
-  text-align: left;
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 0.85rem 0.95rem;
-  cursor: pointer;
+/* Interactive */
+.interactive-placeholder {
+  display: grid;
+  place-items: center;
+  min-height: 16rem;
+  padding: 1.5rem;
+  background: var(--card);
+  border: 2px dashed var(--line);
+  border-radius: var(--radius);
+  color: var(--muted);
+  font-size: 1.15rem;
+  text-align: center;
 }
-.option:hover { border-color: var(--navy); background: white; }
-.quiz-back { margin-top: 0.9rem; }
-.result { border-top: 3px solid var(--gold); padding-top: 0.9rem; }
-.result .tagline { margin-bottom: 0.6rem; }
 
 /* Footer */
 .site-footer { margin-top: 4rem; background: var(--navy-deep); color: rgba(255, 255, 255, 0.86); padding: 2.5rem 0 2rem; }
@@ -384,7 +375,6 @@ main { padding-bottom: 4rem; }
 @media (max-width: 600px) {
   .hero-grid { padding: 2.6rem 0 2.2rem; }
   .section { padding-top: 3rem; }
-  .options { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {
