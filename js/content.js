@@ -28,7 +28,7 @@
  *   Climate Solutions · Living Learning Campus
  */
 window.SITE = {
-  templateMode: true,
+  templateMode: false,
 
   org: {
     name: "ATLearn",
