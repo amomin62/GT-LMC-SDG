@@ -2,7 +2,7 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 
-const root = __dirname;
+const root = path.join(__dirname, "..");
 const port = Number(process.env.PORT) || 8765;
 const reloadPath = "/__livereload";
 const reloadScript = `<script>new EventSource("${reloadPath}").onmessage = () => location.reload();</script>`;
