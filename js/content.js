@@ -76,8 +76,8 @@ window.SITE = {
     heading: "Watch",
     title: "Inclusive Education – Education Equity Now",
     url: "https://www.youtube.com/watch?v=8HPh4RoV63s",
-    caption: "[Tell the viewer what to notice and why this video belongs on the page. Say who made it.]",
-    transcript: "[Paste a short transcript, or say where captions are available.]"
+    caption: "",
+    transcript: ""
   },
 
   organizations: {
@@ -133,74 +133,90 @@ window.SITE = {
 
   interactive: {
     heading: "Find your fit",
-    intro: "Answer four questions about how you want to help. You will get a match, Horizons Atlanta or Inspiredu, and a specific page where a Georgia Tech student can volunteer.",
+    intro: "Answer four questions about how you want to help. You will get a match among Horizons Atlanta, Inspiredu, Big Brothers Big Sisters of Metro Atlanta, and Buddy Jackets, plus a page where a Georgia Tech student can get involved.",
     restartLabel: "Retake the quiz",
     questions: [
       {
-        prompt: "How do you want to spend the hour?",
+        prompt: "How do you want to spend the time?",
         options: [
           {
-            label: "With a student, teaching or tutoring",
+            label: "In a classroom, teaching literacy or STEM",
             scores: { "horizons-atlanta": 2 }
           },
           {
-            label: "With hardware and software, so a family can get online",
+            label: "With laptops and digital-literacy workshops",
             scores: { "inspiredu-atl": 2 }
           },
           {
-            label: "Wherever a team can use me soonest",
-            scores: { "horizons-atlanta": 1, "inspiredu-atl": 1 }
+            label: "One-to-one with the same young person",
+            scores: { "bbbs-atlanta": 2 }
+          },
+          {
+            label: "Alongside other Tech students at community events",
+            scores: { "buddy-jackets": 2 }
           }
         ]
       },
       {
-        prompt: "Which fact on this page do you want to work on?",
+        prompt: "Which commitment fits you?",
         options: [
           {
-            label: "Too few Atlanta students are reading on grade level",
+            label: "A summer program, when school is out",
             scores: { "horizons-atlanta": 2 }
           },
           {
-            label: "Households without home internet cannot reach homework or job training",
+            label: "A workshop shift, or a session refurbishing computers",
             scores: { "inspiredu-atl": 2 }
           },
           {
-            label: "Both. One gap feeds the other.",
-            scores: { "horizons-atlanta": 1, "inspiredu-atl": 1 }
+            label: "At least twice a month for a year",
+            scores: { "bbbs-atlanta": 2 }
+          },
+          {
+            label: "Events and service during the semester",
+            scores: { "buddy-jackets": 2 }
           }
         ]
       },
       {
-        prompt: "What can you bring this month?",
+        prompt: "Where do you picture yourself?",
         options: [
           {
-            label: "Patience to explain an idea until it clicks",
+            label: "In Horizons’ summer learning program, including the one at Georgia Tech",
             scores: { "horizons-atlanta": 2 }
           },
           {
-            label: "Comfort fixing a laptop or coaching someone through an app",
+            label: "At a workbench or a digital skills workshop",
             scores: { "inspiredu-atl": 2 }
           },
           {
-            label: "A steady hour. I can learn the rest on site.",
-            scores: { "horizons-atlanta": 1, "inspiredu-atl": 1 }
+            label: "At the library or out in the neighborhood with one mentee",
+            scores: { "bbbs-atlanta": 2 }
+          },
+          {
+            label: "At the Agape Youth and Family Center, or a Buddy Jackets event",
+            scores: { "buddy-jackets": 2 }
           }
         ]
       },
       {
-        prompt: "When can you show up?",
+        prompt: "What do you want someone to get from you?",
         options: [
           {
-            label: "Summer, when school is out and learning loss grows",
+            label: "A teacher for the months when school is out",
             scores: { "horizons-atlanta": 2 }
           },
           {
-            label: "A workshop or a weekend during the semester",
+            label: "A computer, and someone to explain how to use it",
             scores: { "inspiredu-atl": 2 }
           },
           {
-            label: "The first opening either group has",
-            scores: { "horizons-atlanta": 1, "inspiredu-atl": 1 }
+            label: "One adult who keeps showing up",
+            scores: { "bbbs-atlanta": 2 }
+          },
+          {
+            label: "A group of college students who make higher education feel nearby",
+            scores: { "buddy-jackets": 2 }
           }
         ]
       }
@@ -208,33 +224,42 @@ window.SITE = {
     results: {
       "horizons-atlanta": {
         title: "Horizons Atlanta fits how you want to help.",
-        body: "Your answers point to time with students: teaching, reading, and the months when school is out. Horizons at Georgia Tech serves about 240 rising 1st through 9th graders with reading support, STEAM, and enrichment, on campus in the summer and during the school year. Fill out the volunteer interest form and say you are a Georgia Tech student. That hour is how you put SDG 4 into practice in the city you study in.",
+        body: "Your answers point to teaching: literacy, STEM, and the summer months when school is out. Horizons Atlanta offers free summer learning for students from communities with the fewest extra supports, including a program at the Georgia Tech campus. Fill out the volunteer interest form and say you are a Georgia Tech student.",
         links: [
-          { label: "Open the volunteer form", href: "https://www.horizonsatlanta.org/about/volunteer-with-us/" },
+          { label: "Open the Horizons volunteer form", href: "https://www.horizonsatlanta.org/about/volunteer-with-us/" },
           { label: "See Horizons at Georgia Tech", href: "https://www.horizonsatlanta.org/our-region/georgia-tech/" }
         ]
       },
       "inspiredu-atl": {
         title: "Inspiredu fits how you want to help.",
-        body: "Your answers point to the technology side of the same gap: computers, internet, and families shut out of homework and training. Digital Skills Volunteers support Inspiredu workshops, in person or online. Tech Team volunteers clean and reimage the laptops those programs give out. Open the volunteer page and pick the role that matches the hour you have.",
+        body: "Your answers point to the technology side of the gap: computers, workshops, and families shut out of homework and training. Digital Skills Volunteers support Inspiredu workshops, in person or online. Tech Team volunteers clean and reimage the laptops those programs give out. Open the volunteer page and pick the role that matches the hour you have.",
         links: [
           { label: "See Inspiredu volunteer roles", href: "https://www.iuatl.org/volunteer" }
         ]
       },
-      tie: {
-        title: "Start with either organization. Then come back for the other.",
-        body: "Your answers split between teaching and technology, and Atlanta needs both. Only 35.7 percent of Atlanta Public Schools students in grades 3–8 scored proficient or above in English, and about one Atlanta household in twelve has no home internet. Contact the group you can reach this week. Use the other link after that first hour is on your calendar.",
+      "bbbs-atlanta": {
+        title: "Big Brothers Big Sisters of Metro Atlanta fits how you want to help.",
+        body: "Your answers point to a one-to-one relationship: the same young person, at least twice a month, for at least a year. Big Brothers Big Sisters matches children and teens with mentors who read, visit the library, and spend time in the community. Review the mentor requirements and sign up for a Big Orientation. Tell them you are a Georgia Tech student.",
         links: [
-          { label: "Horizons Atlanta volunteer form", href: "https://www.horizonsatlanta.org/about/volunteer-with-us/" },
-          { label: "Inspiredu volunteer page", href: "https://www.iuatl.org/volunteer" }
+          { label: "Become a Big", href: "https://bbbsatl.org/be-a-big/" }
         ]
+      },
+      "buddy-jackets": {
+        title: "Buddy Jackets fits how you want to help.",
+        body: "Your answers point to a campus group: other Georgia Tech students, events during the semester, and service with children in Atlanta. Buddy Jackets mentors local youth, promotes higher education, and volunteers at the Agape Youth and Family Center. Open their Georgia Tech page and ask about membership, mentoring, and the next community event.",
+        links: [
+          { label: "See Buddy Jackets on campus", href: "https://gatech.campuslabs.com/engage/organization/buddy-jackets" }
+        ]
+      },
+      tie: {
+        body: "Your answers landed evenly, so more than one organization fits. Each link below is a different kind of help. Contact the group you can reach this week, and save the others for after that first step is on your calendar. Only 35.7 percent of Atlanta Public Schools students in grades 3–8 scored proficient or above in English."
       }
     }
   },
 
   footer: {
     close: "Join ATLearn in opening doors to education across Atlanta: teach, mentor, or volunteer.",
-    credits: "[Names, course, and term]",
+    credits: "Alexandra, Ali, Owen, Siva, and Srija. LMC 3403, Fall 2026.",
     note: "Student campaign for the Georgia Tech community. This page is not an official Georgia Tech site."
   }
 };

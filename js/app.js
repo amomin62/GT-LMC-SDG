@@ -120,16 +120,8 @@
       <section class="section" id="watch">
         <div class="wrap">
           ${sectionHead("02", video.heading)}
-          <div class="video-layout">
+          <div class="video-layout video-solo">
             <div class="video-frame">${videoPlayer(video)}</div>
-            <div class="video-copy">
-              <h3>${esc(video.title)}</h3>
-              <p>${esc(video.caption)}</p>
-              <details class="transcript">
-                <summary>Transcript</summary>
-                <p>${esc(video.transcript)}</p>
-              </details>
-            </div>
           </div>
         </div>
       </section>`;
@@ -239,22 +231,49 @@
   }
 
   function quizResultHtml() {
-    const winner = quizWinner();
+    const winners = quizWinners();
     const results = quiz.results || {};
-    const copy = results[winner] || results.tie;
-    if (!copy) {
-      return `<div class="quiz-card"><p>Add a result for this match under interactive.results in js/content.js.</p></div>`;
-    }
-    const links = (copy.links || []).map((link) => actionLink(link.href, link.label)).join("");
     const back = `<button type="button" class="btn btn-line" data-action="quiz-back">Back</button>`;
     const restart = `<button type="button" class="btn btn-line" data-action="quiz-restart">${esc(quiz.restartLabel || "Retake the quiz")}</button>`;
+    let title = "";
+    let body = "";
+    let links = "";
+
+    if (winners.length === 1 && results[winners[0]]) {
+      title = results[winners[0]].title;
+      body = results[winners[0]].body;
+      links = (results[winners[0]].links || []).map((link) => actionLink(link.href, link.label)).join("");
+    } else if (winners.length > 1) {
+      title = tieTitle(winners.map(orgName));
+      body = (results.tie && results.tie.body) || "Your answers landed evenly. Contact the group you can reach this week.";
+      links = winners.map((id) => {
+        const copy = results[id];
+        const first = copy && copy.links && copy.links[0];
+        if (first) return actionLink(first.href, first.label);
+        const org = orgs.find((item) => item.id === id);
+        return org ? actionLink(org.href, org.name) : "";
+      }).join("");
+    } else {
+      return `<div class="quiz-card"><p>Add a result for this match under interactive.results in js/content.js.</p></div>`;
+    }
+
     return quizFrame(
       "Your match",
       100,
-      `<h3 id="quiz-prompt" tabindex="-1">${esc(copy.title)}</h3>
-       <p class="quiz-body">${esc(copy.body)}</p>`,
+      `<h3 id="quiz-prompt" tabindex="-1">${esc(title)}</h3>
+       <p class="quiz-body">${esc(body)}</p>`,
       links + back + restart
     );
+  }
+
+  function tieTitle(names) {
+    if (names.length === 2) return names[0] + " and " + names[1] + " both fit how you want to help.";
+    return names.slice(0, -1).join(", ") + ", and " + names[names.length - 1] + " all fit how you want to help.";
+  }
+
+  function orgName(id) {
+    const org = orgs.find((item) => item.id === id);
+    return org && org.name ? org.name : id;
   }
 
   function quizFrame(status, width, body, actions) {
@@ -267,7 +286,7 @@
       </div>`;
   }
 
-  function quizWinner() {
+  function quizWinners() {
     const totals = {};
     quizAnswers.forEach((answer) => {
       const question = quizQuestions[answer.step];
@@ -278,8 +297,13 @@
       });
     });
     const ranked = Object.entries(totals).sort((a, b) => b[1] - a[1]);
-    if (!ranked.length || (ranked.length > 1 && ranked[0][1] === ranked[1][1])) return "tie";
-    return ranked[0][0];
+    if (!ranked.length) return [];
+    const top = ranked[0][1];
+    const order = new Map(orgs.map((org, index) => [org.id, index]));
+    return ranked
+      .filter((entry) => entry[1] === top)
+      .map((entry) => entry[0])
+      .sort((a, b) => (order.has(a) ? order.get(a) : 99) - (order.has(b) ? order.get(b) : 99));
   }
 
   function actionLink(href, label) {
