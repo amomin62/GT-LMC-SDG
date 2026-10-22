@@ -118,13 +118,13 @@ window.SITE = {
         tags: ["UN SDG 4: Quality Education", "Education for Sustainable Development"]
       },
       {
-        id: "boys-girls-clubs-atlanta",
-        name: "Boys & Girls Clubs of Metro Atlanta",
-        tagline: "Atlanta Youth Development Nonprofit",
-        about: "Boys & Girls Clubs of Metro Atlanta provides safe and supportive spaces for children and teens outside of school hours. The organization focuses on academic success, healthy lifestyles, and character and leadership development. Individual volunteers assist staff with after-school programs and activities, while groups can support events and school supply drives.",
-        why: "Boys & Girls Clubs is important for Georgia Tech students because it connects education with opportunities to support young people in the Atlanta community. Students interested in education, leadership, and community outreach can help with Club activities while encouraging children and teens to keep learning beyond the classroom.",
-        involve: "Check out the organization’s volunteer page to explore individual and group opportunities. Individual volunteers begin with a VolunteerHub profile and complete background screening, required training, and orientation before serving at a Club.",
-        href: "https://bgcma.org/get-involved/volunteer/",
+        id: "buddy-jackets",
+        name: "Buddy Jackets",
+        tagline: "Georgia Tech Student Service Organization",
+        about: "Buddy Jackets is a student organization at Georgia Tech that connects students with children in the surrounding Atlanta community through mentoring, volunteering, and events. The organization promotes higher education and builds relationships between college students and local youth. Its community service opportunities include volunteering at the Agape Youth and Family Center.",
+        why: "Buddy Jackets is relevant to Georgia Tech students since it combines education, mentorship, and community service through a campus organization. Students interested in working with children can share their experiences with college, encourage an interest in learning, and build connections with other Tech students who want to support the Atlanta community.",
+        involve: "Visit Buddy Jackets’ Georgia Tech organization page to learn more and contact the group about current membership and volunteer opportunities. Ask how to take part in mentoring, community events, and service activities during the semester.",
+        href: "https://gatech.campuslabs.com/engage/organization/buddy-jackets",
         hrefLabel: "Visit the organization",
         tags: ["UN SDG 4: Quality Education", "Education for Sustainable Development"]
       }
