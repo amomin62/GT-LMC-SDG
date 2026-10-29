@@ -15,18 +15,30 @@
   let quizStep = 0;
   let quizAnswers = [];
 
-  document.title = plain(site.campaign.title) + " · " + plain(site.org.name);
+  const schools = window.SCHOOLS || [];
+  const techTower = [33.77245, -84.39481];
+  const twoMilesInMeters = 3218.7;
+  const bands = [
+    { id: "low", label: "Under 25%", color: "#c63b26", test: (pct) => pct < 25 },
+    { id: "mid", label: "25–50%", color: "#e09a00", test: (pct) => pct >= 25 && pct < 50 },
+    { id: "high", label: "50% or more", color: "#00796f", test: (pct) => pct >= 50 }
+  ];
+  let schoolMap = null;
+  let schoolMarkers = [];
+
+  document.title = plain(site.org.name) + " · " + plain(site.campaign.title);
 
   app.innerHTML = [
     banner(),
     header(),
     hero(),
-    `<main id="content">${issueSection()}${videoSection()}${orgSection()}${interactiveSection()}</main>`,
+    `<main id="content">${issueSection()}${contextSection()}${videoSection()}${orgSection()}${interactiveSection()}</main>`,
     footer()
   ].join("");
 
   updateWordCount();
   renderQuiz(false);
+  initMap();
   document.addEventListener("click", onClick);
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") closeMenu();
@@ -54,6 +66,7 @@
           <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
           <nav id="nav" class="nav" aria-label="Page">
             <a href="#issue">Issue</a>
+            <a href="#map">Map</a>
             <a href="#watch">Watch</a>
             <a href="#organizations">Organizations</a>
             <a class="nav-cta" href="#fit">${esc(site.interactive.heading)}</a>
@@ -63,55 +76,361 @@
   }
 
   function hero() {
+    const campaign = site.campaign;
+    const image = safeUrl(campaign.image);
+    const absolute = image ? new URL(image, window.location.href).href : "";
+    const style = image ? ` style="--hero-image: url('${esc(absolute.replace(/'/g, "%27"))}')"` : "";
+    const credit = image && campaign.imageCredit ? `<p class="hero-credit">${esc(campaign.imageCredit)}</p>` : "";
     return `
-      <div class="hero" id="top">
+      <div class="hero${image ? " has-image" : ""}" id="top"${style}>
         <div class="wrap hero-grid">
           <div>
-            <p class="kicker">${esc(site.campaign.kicker)}</p>
-            <h1>${esc(site.campaign.title)}</h1>
-            <p class="lede">${esc(site.campaign.lede)}</p>
+            <p class="kicker">${esc(campaign.kicker)}</p>
+            <h1>${esc(campaign.title)}</h1>
+            <p class="lede">${esc(campaign.lede)}</p>
             <div class="hero-actions">
-              <a class="btn btn-gold" href="#watch">Watch the video</a>
-              <a class="btn btn-ghost" href="#organizations">Meet the organizations</a>
+              <a class="btn btn-gold" href="#guess">${esc(campaign.primaryCta || "Start here")}</a>
+              <a class="btn btn-ghost" href="#map">${esc(campaign.secondaryCta || "See the map")}</a>
             </div>
-            <p class="chip">For: ${esc(site.campaign.audience)}</p>
+            <p class="chip">For: ${esc(campaign.audience)}</p>
           </div>
           <aside class="hero-panel">
             <p class="kicker">Speaking as</p>
             <p>${esc(site.org.voice)}</p>
           </aside>
         </div>
+        ${credit}
       </div>`;
   }
 
   function issueSection() {
     const issue = site.issue;
     const stats = (issue.stats || []).map((stat) => `
-      <article class="stat">
+      <article class="stat${stat.tone === "hope" ? " stat-hope" : ""}">
+        ${stat.badge ? `<p class="stat-badge">${esc(stat.badge)}</p>` : ""}
         <b>${esc(stat.figure)}</b>
         <span>${esc(stat.label)}</span>
-        <p class="source">${esc(stat.source)}</p>
+        <p class="source">${sourceLink(stat.source, stat.sourceUrl)}</p>
       </article>`).join("");
-    const sdgs = (issue.sdgs || []).map((sdg) => `
-      <span class="goal"><b>SDG ${esc(sdg.number)}</b> ${esc(sdg.name)}</span>`).join("");
-    const next = (issue.nextPlan || []).map((name) => `
-      <span class="goal goal-next"><b>Sustainability Next</b> ${esc(name)}</span>`).join("");
+    const sdgs = (issue.sdgs || []).map((sdg) => goalTag("goal", "SDG " + sdg.number, sdg.name, sdg.href)).join("");
+    const next = (issue.nextPlan || [])
+      .map((item) => (typeof item === "string" ? { name: item } : item))
+      .map((item) => goalTag("goal goal-next", "Sustainability Next", item.name, item.href))
+      .join("");
+    const links = (issue.links || []).map((link) => {
+      const href = safeUrl(link.href);
+      return href ? `<li><a href="${esc(href)}" target="_blank" rel="noopener">${esc(link.label)}</a></li>` : "";
+    }).join("");
 
     return `
       <section class="section" id="issue">
         <div class="wrap">
           ${sectionHead("01", issue.heading)}
+          ${guessHtml(issue.guess)}
+          ${storyHtml(issue.story)}
           <div class="issue-grid">
-            <div>${paragraphs(issue.paragraphs)}</div>
+            <div class="issue-copy">${paragraphs(issue.paragraphs)}</div>
             <aside class="fit-box">
               <p class="kicker">Where this fits</p>
               <div class="goals">${sdgs}${next}</div>
               <p>${esc(issue.connection)}</p>
+              ${links ? `<ul class="read-more">${links}</ul>` : ""}
             </aside>
           </div>
           <div class="stat-grid">${stats}</div>
+          ${reflectionHtml(issue.reflection)}
         </div>
       </section>`;
+  }
+
+  function goalTag(className, label, name, href) {
+    const url = safeUrl(href);
+    const inner = `<b>${esc(label)}</b> ${esc(name)}`;
+    return url
+      ? `<a class="${className}" href="${esc(url)}" target="_blank" rel="noopener">${inner}</a>`
+      : `<span class="${className}">${inner}</span>`;
+  }
+
+  function guessHtml(guess) {
+    if (!guess) return "";
+    const buttons = Array.from({ length: 10 }, (_, i) => `
+      <button type="button" class="guess-num" data-action="guess" data-value="${i + 1}" aria-pressed="false">${i + 1}</button>`).join("");
+    return `
+      <div class="guess" id="guess">
+        <p class="guess-kicker">Quick question</p>
+        <h3 class="guess-prompt">${esc(guess.prompt)}</h3>
+        <div class="guess-nums" role="group" aria-label="Your guess, out of 10 students">${buttons}</div>
+        <div class="guess-result" aria-live="polite" hidden></div>
+      </div>`;
+  }
+
+  function showGuess(value) {
+    const guess = site.issue.guess;
+    const box = document.querySelector(".guess-result");
+    if (!guess || !box) return;
+    const answer = Number(guess.answer) || 0;
+    const diff = value - answer;
+    const template = Math.abs(diff) < 1 ? guess.close : diff > 0 ? guess.high : guess.low;
+    document.querySelectorAll(".guess-num").forEach((button) => {
+      button.setAttribute("aria-pressed", String(Number(button.dataset.value) === value));
+    });
+    box.hidden = false;
+    box.innerHTML = `
+      <div class="guess-bar" aria-hidden="true">
+        <span class="guess-fill"></span>
+        <span class="guess-mark" style="left:${value * 10}%"><i>Your guess</i></span>
+      </div>
+      <div class="guess-scale" aria-hidden="true"><span>0</span><span>5</span><span>10</span></div>
+      <p class="guess-reveal">${esc(guess.reveal)}</p>
+      <p>${esc(String(template || "").replace("{n}", value))}</p>
+      <p class="source">${sourceLink(guess.source, guess.sourceUrl)}</p>`;
+    requestAnimationFrame(() => {
+      const fill = box.querySelector(".guess-fill");
+      if (fill) fill.style.width = answer * 10 + "%";
+    });
+  }
+
+  function storyHtml(story) {
+    if (!story) return "";
+    const school = schools.find(([name]) => name === story.school);
+    const schoolBox = school ? `
+      <div class="story-school">
+        <p class="story-pct" style="color:${bandFor(school[3]).color}"><b>${school[3].toFixed(1)}%</b></p>
+        <p>of students at ${esc(story.schoolName || school[0])} read and write at grade level (2023–24). It is ${milesFromTech(school[1], school[2]).toFixed(1)} miles from Tech Tower.</p>
+        <button type="button" class="btn btn-navy" data-action="map-school" data-school="${esc(school[0])}">${esc(story.schoolLabel || "See it on the map")}</button>
+      </div>` : "";
+    return `
+      <article class="story">
+        <div class="story-copy">
+          <p class="guess-kicker">${esc(story.kicker)}</p>
+          <h3>${esc(story.title)}</h3>
+          ${paragraphs(story.paragraphs)}
+          <p class="source">${sourceLink(story.source, story.sourceUrl)}</p>
+        </div>
+        <aside class="story-side">
+          ${story.quote ? `<blockquote><p>“${esc(story.quote)}”</p><cite>${esc(story.quoteBy)}</cite></blockquote>` : ""}
+          ${schoolBox}
+        </aside>
+      </article>`;
+  }
+
+  function reflectionHtml(reflection) {
+    if (!reflection || !reflection.options) return "";
+    const options = reflection.options.map((option, index) => `
+      <button type="button" class="reflect-option" data-action="reflect" data-index="${index}" aria-pressed="false">${esc(option.label)}</button>`).join("");
+    return `
+      <div class="reflect">
+        <p class="guess-kicker">Your turn</p>
+        <h3>${esc(reflection.prompt)}</h3>
+        <div class="reflect-options" role="group" aria-label="${esc(reflection.prompt)}">${options}</div>
+        <div class="reflect-reply" aria-live="polite" hidden></div>
+      </div>`;
+  }
+
+  function showReflection(index) {
+    const option = site.issue.reflection.options[index];
+    const box = document.querySelector(".reflect-reply");
+    if (!option || !box) return;
+    document.querySelectorAll(".reflect-option").forEach((button) => {
+      button.setAttribute("aria-pressed", String(Number(button.dataset.index) === index));
+    });
+    const org = orgs.find((item) => item.id === option.orgId);
+    box.hidden = false;
+    box.innerHTML = `
+      <p>${esc(option.reply)}</p>
+      ${org ? `<a class="btn btn-navy" href="#${esc(org.id)}">Meet ${esc(org.name)}</a>` : ""}`;
+  }
+
+  function contextSection() {
+    const context = site.context;
+    if (!context) return "";
+    const filters = [{ id: "all", label: "All schools" }].concat(bands).map((band, index) => `
+      <button type="button" class="map-filter" data-action="map-filter" data-band="${band.id}" aria-pressed="${index === 0}">
+        ${band.color ? `<i style="background:${band.color}"></i>` : ""}${esc(band.label)}
+      </button>`).join("");
+    return `
+      <section class="section" id="map">
+        <div class="wrap">
+          ${sectionHead("02", context.heading)}
+          <p class="section-intro">${esc(context.intro)}</p>
+          <div class="map-layout">
+            <div class="map-frame">
+              <div id="school-map" class="school-map" role="region" aria-label="Map of Atlanta public schools colored by reading proficiency"></div>
+            </div>
+            <aside class="map-panel">
+              <p class="kicker">Share of students reading at grade level</p>
+              <div class="map-filters" role="group" aria-label="Show schools by reading level">${filters}</div>
+              <div class="map-info" aria-live="polite">${mapSummaryHtml()}</div>
+            </aside>
+          </div>
+          <p class="source map-source">${sourceLink(context.source, context.sourceUrl)}</p>
+          ${chartHtml(context.chart)}
+        </div>
+      </section>`;
+  }
+
+  function mapSummaryHtml() {
+    const near = schools
+      .map(([name, lat, lon, pct]) => ({ name, pct, miles: milesFromTech(lat, lon) }))
+      .filter((school) => school.miles <= 2)
+      .sort((a, b) => a.pct - b.pct);
+    if (!near.length) return "<p>Tap a dot to see a school.</p>";
+    const low = near[0];
+    const high = near[near.length - 1];
+    return `
+      <p class="map-big"><b>${Math.round(low.pct)}%</b> to <b>${Math.round(high.pct)}%</b></p>
+      <p>That is the range across the ${near.length} public schools within two miles of Tech Tower, from ${esc(low.name)} to ${esc(high.name)}.</p>
+      <p class="map-hint">Tap any dot to see that school.</p>`;
+  }
+
+  function schoolInfoHtml(name, pct, miles) {
+    const band = bandFor(pct);
+    return `
+      <p class="map-school">${esc(name)}</p>
+      <p class="map-big" style="color:${band.color}"><b>${pct.toFixed(1)}%</b></p>
+      <p>of students read and write at grade level. That is about ${Math.round(pct / 10)} in 10. This school is ${miles.toFixed(1)} miles from Tech Tower.</p>
+      <button type="button" class="btn btn-line" data-action="map-reset">Back to the overview</button>`;
+  }
+
+  function initMap() {
+    const el = document.getElementById("school-map");
+    if (!el) return;
+    if (!window.L || !schools.length) {
+      el.innerHTML = `<p class="map-fallback">The map needs an internet connection to load. Refresh the page to try again.</p>`;
+      return;
+    }
+    schoolMap = L.map(el, { scrollWheelZoom: false });
+    const esri = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/";
+    L.tileLayer(esri + "World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
+      attribution: "Tiles &copy; Esri &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap contributors",
+      maxZoom: 16
+    }).addTo(schoolMap);
+    L.tileLayer(esri + "World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}", { maxZoom: 16 }).addTo(schoolMap);
+    L.circle(techTower, {
+      radius: twoMilesInMeters,
+      color: "#003057",
+      weight: 1.5,
+      dashArray: "6 6",
+      fillColor: "#003057",
+      fillOpacity: 0.04,
+      interactive: false
+    }).addTo(schoolMap);
+    L.marker(techTower, {
+      icon: L.divIcon({ className: "gt-pin", html: "<span>GT</span>", iconSize: [34, 34] }),
+      title: "Georgia Tech, Tech Tower",
+      keyboard: false
+    }).addTo(schoolMap).bindTooltip("Georgia Tech · Tech Tower");
+
+    schoolMarkers = schools.map(([name, lat, lon, pct]) => {
+      const band = bandFor(pct);
+      const marker = L.circleMarker([lat, lon], {
+        radius: 7,
+        color: "#ffffff",
+        weight: 1.5,
+        fillColor: band.color,
+        fillOpacity: 0.95
+      });
+      marker.bindTooltip(`${esc(name)}: ${pct.toFixed(1)}%`);
+      marker.on("click", () => {
+        const info = document.querySelector(".map-info");
+        if (info) info.innerHTML = schoolInfoHtml(name, pct, milesFromTech(lat, lon));
+      });
+      marker.addTo(schoolMap);
+      return { name, marker, band: band.id };
+    });
+    schoolMap.fitBounds(L.latLngBounds(schools.map(([, lat, lon]) => [lat, lon])), { padding: [16, 16] });
+  }
+
+  function filterMap(bandId) {
+    document.querySelectorAll(".map-filter").forEach((button) => {
+      button.setAttribute("aria-pressed", String(button.dataset.band === bandId));
+    });
+    if (!schoolMap) return;
+    schoolMarkers.forEach(({ marker, band }) => {
+      if (bandId === "all" || band === bandId) marker.addTo(schoolMap);
+      else marker.remove();
+    });
+  }
+
+  function focusSchool(name) {
+    const school = schools.find(([schoolName]) => schoolName === name);
+    if (!school) return;
+    const [, lat, lon, pct] = school;
+    filterMap("all");
+    const info = document.querySelector(".map-info");
+    if (info) info.innerHTML = schoolInfoHtml(name, pct, milesFromTech(lat, lon));
+    const section = document.getElementById("map");
+    if (section) section.scrollIntoView();
+    const entry = schoolMarkers.find((item) => item.name === name);
+    if (!schoolMap || !entry) return;
+    schoolMap.fitBounds(L.latLngBounds([techTower, [lat, lon]]), { padding: [48, 48] });
+    entry.marker.openTooltip();
+  }
+
+  function bandFor(pct) {
+    return bands.find((band) => band.test(pct)) || bands[0];
+  }
+
+  function milesFromTech(lat, lon) {
+    const rad = Math.PI / 180;
+    const dLat = (lat - techTower[0]) * rad;
+    const dLon = (lon - techTower[1]) * rad;
+    const h = Math.sin(dLat / 2) ** 2 + Math.cos(techTower[0] * rad) * Math.cos(lat * rad) * Math.sin(dLon / 2) ** 2;
+    return 2 * 3958.8 * Math.asin(Math.sqrt(h));
+  }
+
+  function chartHtml(chart) {
+    if (!chart || !chart.rows) return "";
+    const min = 185;
+    const max = 265;
+    const pos = (score) => ((score - min) / (max - min)) * 100;
+    const rows = chart.rows.map((row) => `
+      <div class="chart-row${row.highlight ? " is-atl is-mystery" : ""}">
+        <span class="chart-label">${esc(row.label)}</span>
+        <div class="chart-track">
+          <span class="chart-line" style="left:${pos(row.low)}%;width:${pos(row.high) - pos(row.low)}%"></span>
+          <span class="chart-dot dot-low" style="left:${pos(row.low)}%" title="${Math.round(row.low)}"></span>
+          <span class="chart-dot dot-high" style="left:${pos(row.high)}%" title="${Math.round(row.high)}"></span>
+          <span class="chart-mystery" aria-hidden="true">?</span>
+        </div>
+        <span class="chart-gap">${esc(row.gap)} points</span>
+      </div>`).join("");
+    const choices = [["smaller", "Smaller"], ["same", "About the same"], ["bigger", "Bigger"]].map(([id, label]) => `
+      <button type="button" class="reflect-option" data-action="chart-guess" data-choice="${id}" aria-pressed="false">${label}</button>`).join("");
+    return `
+      <div class="gap-chart">
+        <p class="guess-kicker">Make a call</p>
+        <h3>${esc(chart.heading)}</h3>
+        <p class="chart-prompt">${esc(chart.prompt)}</p>
+        <div class="reflect-options chart-choices" role="group" aria-label="Is Atlanta’s gap smaller or bigger?">${choices}</div>
+        <div class="chart-legend">
+          <span><i class="dot-low"></i>${esc(chart.lowLabel)}</span>
+          <span><i class="dot-high"></i>${esc(chart.highLabel)}</span>
+        </div>
+        <div class="chart-rows">${rows}</div>
+        <div class="chart-reply" aria-live="polite" hidden></div>
+        <p class="source">${sourceLink(chart.source, chart.sourceUrl)}</p>
+      </div>`;
+  }
+
+  function showChart(choice) {
+    const chart = site.context.chart;
+    document.querySelectorAll("[data-action='chart-guess']").forEach((button) => {
+      button.setAttribute("aria-pressed", String(button.dataset.choice === choice));
+    });
+    document.querySelectorAll(".chart-row.is-mystery").forEach((row) => row.classList.remove("is-mystery"));
+    const reply = document.querySelector(".chart-reply");
+    if (!reply) return;
+    reply.hidden = false;
+    reply.innerHTML = `<p><strong>${choice === "bigger" ? "You called it." : "Not quite."}</strong> ${esc(chart.reveal)}</p>`;
+  }
+
+  function sourceLink(text, url) {
+    const href = safeUrl(url);
+    if (!text) return "";
+    return href
+      ? `<a href="${esc(href)}" target="_blank" rel="noopener">${esc(text)}</a>`
+      : esc(text);
   }
 
   function videoSection() {
@@ -119,7 +438,8 @@
     return `
       <section class="section" id="watch">
         <div class="wrap">
-          ${sectionHead("02", video.heading)}
+          ${sectionHead("03", video.heading)}
+          ${video.prompt ? `<p class="section-intro video-prompt">${esc(video.prompt)}</p>` : ""}
           <div class="video-layout video-solo">
             <div class="video-frame">${videoPlayer(video)}</div>
           </div>
@@ -151,7 +471,7 @@
     return `
       <section class="section" id="organizations">
         <div class="wrap">
-          ${sectionHead("03", site.organizations.heading)}
+          ${sectionHead("04", site.organizations.heading)}
           <p class="section-intro">${esc(site.organizations.intro)}</p>
           <div class="org-grid">${cards}</div>
         </div>
@@ -164,13 +484,25 @@
       ? `<a class="btn btn-navy" href="${esc(href)}" target="_blank" rel="noopener">${esc(org.hrefLabel || "Visit")}</a>`
       : `<button class="btn btn-line" type="button" disabled>${esc(org.hrefLabel || "Add a link")}</button>`;
     const tags = (org.tags || []).map((tag) => `<span class="tag">${esc(tag)}</span>`).join("");
+    const image = safeUrl(org.image);
+    const photo = image ? `
+        <figure class="org-photo${org.imageFit === "contain" ? " is-logo" : ""}">
+          <img src="${esc(image)}" alt="${esc(org.imageAlt || "")}" loading="lazy">
+          ${org.imageCredit ? `<figcaption>${esc(org.imageCredit)}</figcaption>` : ""}
+        </figure>` : "";
+    const name = href
+      ? `<a href="${esc(href)}" target="_blank" rel="noopener">${esc(org.name)}</a>`
+      : esc(org.name);
+    const siteLink = href ? `<p class="org-site"><a href="${esc(href)}" target="_blank" rel="noopener">${esc(hostName(href))}</a></p>` : "";
     return `
       <article class="org" id="${esc(org.id)}">
+        ${photo}
         <div class="org-top">
           <span class="org-num">${String(index + 1).padStart(2, "0")}</span>
           <div>
-            <h3>${esc(org.name)}</h3>
+            <h3>${name}</h3>
             <p class="tagline">${esc(org.tagline)}</p>
+            ${siteLink}
           </div>
         </div>
         <p>${esc(org.about)}</p>
@@ -190,7 +522,7 @@
     return `
       <section class="section" id="fit">
         <div class="wrap">
-          ${sectionHead("04", quiz.heading || "Find your fit")}
+          ${sectionHead("05", quiz.heading || "Find your fit")}
           ${intro}
           <div id="quiz" class="quiz" aria-live="polite"></div>
         </div>
@@ -317,6 +649,10 @@
       <footer class="site-footer">
         <div class="wrap">
           <h2>${esc(site.footer.close)}</h2>
+          <div class="hero-actions">
+            <a class="btn btn-gold" href="#fit">${esc(quiz.heading || "Find your fit")}</a>
+            <a class="btn btn-ghost" href="#organizations">Meet the organizations</a>
+          </div>
           <p>${esc(site.footer.credits)}</p>
           <p class="fine">${esc(site.footer.note)}</p>
         </div>
@@ -340,6 +676,37 @@
       sessionStorage.setItem("gtsdg-hide-banner", "1");
       const bar = document.querySelector(".template-banner");
       if (bar) bar.remove();
+      return;
+    }
+
+    if (action === "guess") {
+      showGuess(Number(button.dataset.value));
+      return;
+    }
+
+    if (action === "reflect") {
+      showReflection(Number(button.dataset.index));
+      return;
+    }
+
+    if (action === "chart-guess") {
+      showChart(button.dataset.choice);
+      return;
+    }
+
+    if (action === "map-filter") {
+      filterMap(button.dataset.band);
+      return;
+    }
+
+    if (action === "map-school") {
+      focusSchool(button.dataset.school);
+      return;
+    }
+
+    if (action === "map-reset") {
+      const info = document.querySelector(".map-info");
+      if (info) info.innerHTML = mapSummaryHtml();
       return;
     }
 
@@ -381,7 +748,7 @@
   }
 
   function updateWordCount() {
-    const skip = new Set(["id", "href", "url", "hrefLabel"]);
+    const skip = new Set(["id", "href", "url", "hrefLabel", "sourceUrl", "image", "imageAlt", "imageFit", "imageCredit", "tone", "orgId", "school"]);
     let count = 0;
     function walk(node, key, parentKey) {
       if (typeof node === "string") {
@@ -439,6 +806,14 @@
       return { type: "embed", src: "https://drive.google.com/file/d/" + encodeURIComponent(parts[2]) + "/preview" };
     }
     return { type: "link", src: value };
+  }
+
+  function hostName(url) {
+    try {
+      return new URL(url).hostname.replace(/^www\./, "");
+    } catch (error) {
+      return url;
+    }
   }
 
   function plain(value) {

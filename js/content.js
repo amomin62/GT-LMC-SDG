@@ -9,11 +9,14 @@
  * Set templateMode to false when the editing bar should disappear.
  *
  * Page order:
- *   1. Hero         campaign title and who it is for
- *   2. Issue        the problem, three figures, UN SDG + Sustainability Next
- *   3. Video        YouTube, Vimeo, Google Drive, or a video file in the folder
- *   4. Organizations  exactly the four groups you are promoting
- *   5. Find your fit  quiz. Result keys match organization ids, plus "tie".
+ *   1. Hero         hook question over a background photo
+ *   2. Issue        guess-the-number, the problem, three figures (one tone: "hope"),
+ *                   UN SDG + Sustainability Next, and a "your turn" reflection
+ *   3. Context      map of school reading scores (data in js/schools.js) and a
+ *                   guess-first chart comparing Atlanta's reading gap
+ *   4. Video        YouTube, Vimeo, Google Drive, or a video file in the folder
+ *   5. Organizations  the four groups, each with a photo in images/
+ *   6. Find your fit  quiz. Result keys match organization ids, plus "tie".
  *
  * Video: paste the link into video.url. These all work:
  *   https://www.youtube.com/watch?v=VIDEO_ID
@@ -36,63 +39,156 @@ window.SITE = {
   },
 
   campaign: {
-    kicker: "ATLearn · Opening doors to education across Atlanta",
-    title: "Learning shouldn’t depend on your zip code.",
-    lede: "A few blocks from campus, Atlanta kids and adults are shut out of the kind of education Georgia Tech students often take for granted. ATLearn connects you with the people already working to close that gap, so what you learn here can open doors next door.",
-    audience: "Georgia Tech students"
+    kicker: "ATLearn · Georgia Tech students opening doors to education in Atlanta",
+    title: "What if your zip code decided how well you could read?",
+    lede: "Within two miles of Tech Tower, there are schools where four in five students read at grade level, and schools where fewer than one in six do. You already have what helps close that gap: time, skills, and a college story worth sharing. Ready to use them?",
+    primaryCta: "Take the 10-second guess",
+    secondaryCta: "See the map",
+    audience: "Georgia Tech students",
+    image: "images/hero-horizons.jpg",
+    imageCredit: "Photo: Horizons Atlanta summer program"
   },
 
   issue: {
-    heading: "The issue",
+    heading: "Start with a guess",
+    guess: {
+      prompt: "Before you read on: out of every 10 students in Atlanta Public Schools, grades 3–8, how many do you think read and write at grade level?",
+      answer: 3.57,
+      reveal: "35.7% of Atlanta Public Schools students in grades 3–8 scored proficient or above in English Language Arts.",
+      high: "You guessed {n}. The real answer is fewer than 4. From campus, it is easy to picture the schools we went to.",
+      close: "You guessed {n}. Close: the real answer is just under 4, so most students are behind.",
+      low: "You guessed {n}. The real answer is a little higher, just under 4, which still leaves most students behind.",
+      source: "Georgia Department of Education, Georgia Milestones 2023–24",
+      sourceUrl: "https://goews.georgia.gov/dashboards-data-report-card/downloadable-data"
+    },
+    story: {
+      kicker: "Behind the number",
+      title: "Meet Michael, a third grader about three miles from campus",
+      paragraphs: [
+        "Michael Crowder stands at the front of his third-grade classroom, his mustard-yellow polo buttoned to the top. “Give us some vowels,” his teacher says. His eyes search the chart, but he doesn’t land on an answer.",
+        "Michael missed most of first grade. It was the first fall of the pandemic, and for months Atlanta held school only online. His mom had just had a baby, and their small apartment had no quiet place to learn. By the end of first grade he knew two sight words, “a” and “the.” First graders are expected to know 200.",
+        "His teacher, La’Neeka Gilbert-Jackson, followed his class from first grade to third, and that steady presence helped him start reading. Midway through third grade, he reads like a first grader: real progress, but still behind, like most of his classmates. Now imagine one more adult in his corner. That could be you."
+      ],
+      quote: "He wants it. He’ll catch up.",
+      quoteBy: "La’Neeka Gilbert-Jackson, Michael’s teacher",
+      school: "William M. Boyd Elementary School",
+      schoolName: "Boyd Elementary",
+      schoolLabel: "Find it on the map",
+      source: "Associated Press, “‘Too much to learn’: Schools race to catch up kids’ reading,” April 2023",
+      sourceUrl: "https://apnews.com/article/reading-third-grade-phonics-bd9a14dd348d88c2b11e2dce38829a8e"
+    },
     paragraphs: [
-      "Access to education means more than having a school nearby. It means a qualified teacher in every classroom, books at home, reliable internet, a safe way to get to class, and a second chance for adults who never finished school. In Atlanta, those things are spread unevenly. Some neighborhoods have tutors, enrichment programs, and college counselors. Others, a few miles away, have very little. The gap shows up early, in how well children can read by the end of elementary school, and in Atlanta the reading gap between children from low-income families and their classmates is wider than in other large U.S. cities.",
-      "This is not happening somewhere far away. English Avenue and Vine City sit just west of campus, and a recent study of Atlanta’s Westside found that more than half of the children there live below the federal poverty line. Georgia Tech students spend four years building exactly what these neighborhoods are short on: strong reading, math, and science skills, mentors who have been through college, and a clear path to get there. An hour a week tutoring a middle schooler, a Saturday coding workshop, or helping an adult prepare for the GED turns your education into something you share. It works both ways, too. You build communication and leadership skills no class can teach, and you get to know the city you live in beyond the edge of campus."
+      "Now think about what got you here: a teacher who would not let you coast, books at home, a laptop and Wi-Fi, someone who had been to college. Access to education is all of those things, and in Atlanta they are spread unevenly.",
+      "This is not happening somewhere far away. English Avenue and Vine City sit just west of campus, where a recent study found that more than half of children live below the federal poverty line. So what could one hour a week of your time do? Tutor a middle schooler in math, help a family set up their first laptop, or show a kid what a college student looks like up close."
     ],
     stats: [
       {
-        figure: "35.7%",
-        label: "of Atlanta Public Schools students in grades 3–8 scored proficient or above in English Language Arts",
-        source: "Georgia Milestones results, Atlanta Public Schools, 2023–24"
-      },
-      {
         figure: "60 points",
-        label: "gap in 4th-grade reading scores between Atlanta Public Schools students from low-income families and their classmates, wider than in other large U.S. cities, Georgia, or the nation",
-        source: "National Assessment of Educational Progress (The Nation’s Report Card), 2024"
+        label: "gap in 4th-grade reading between Atlanta Public Schools students from low-income families and their classmates, more than double the national gap",
+        source: "The Nation’s Report Card (NAEP), 2024",
+        sourceUrl: "https://www.nationsreportcard.gov/profiles/districtprofile/overview/XA"
       },
       {
         figure: "1 in 12",
-        label: "Atlanta households has no home broadband internet subscription, cutting families off from homework, online classes, and job training",
-        source: "U.S. Census Bureau, American Community Survey 2020–2024"
+        label: "Atlanta households has no home broadband, cutting families off from homework, online classes, and job training",
+        source: "U.S. Census Bureau, American Community Survey 2020–2024",
+        sourceUrl: "https://www.census.gov/quickfacts/atlantacitygeorgia"
+      },
+      {
+        tone: "hope",
+        badge: "Reason for hope",
+        figure: "+6.9 points",
+        label: "Atlanta’s gain in 4th-grade reading from 2022 to 2024, the only large-city district in the country to improve significantly. Extra help works.",
+        source: "The Nation’s Report Card (NAEP), 2024",
+        sourceUrl: "https://www.nationsreportcard.gov/profiles/districtprofile/overview/XA"
       }
     ],
     sdgs: [
-      { number: "4", name: "Quality Education" }
+      { number: "4", name: "Quality Education", href: "https://sdgs.un.org/goals/goal4" }
     ],
-    nextPlan: ["Education for Sustainable Development"],
-    connection: "SDG 4 asks the world to “ensure inclusive and equitable quality education and promote lifelong learning opportunities for all.” Georgia Tech’s Sustainability Next Plan makes Education for Sustainable Development one of its six priorities, and since 2023 it has funded faculty to build the SDGs into roughly 100 courses, so nearly every Tech undergraduate now meets the goals in class. The plan also calls on Georgia Tech to “lead by example in the practice and culture of sustainability,” and the Institute’s strategic plan commits it to being “an anchor institution, partner, and catalyst of sustainable development in our city.” ATLearn carries that commitment off the syllabus and into the neighborhood: when you tutor, mentor, or teach next door, you put SDG 4 into practice in the city Georgia Tech calls home."
+    nextPlan: [
+      { name: "Education for Sustainable Development", href: "https://sustain.gatech.edu/sustainability-next-plan/" }
+    ],
+    connection: "SDG 4 asks the world to “ensure inclusive and equitable quality education and promote lifelong learning opportunities for all.” Georgia Tech’s Sustainability Next Plan makes Education for Sustainable Development one of its six priorities, and the Strategic Plan commits the Institute to being “an anchor institution, partner, and catalyst of sustainable development in our city.” Our answer: tutor, mentor, or teach next door.",
+    links: [
+      { label: "UN Sustainable Development Goal 4", href: "https://sdgs.un.org/goals/goal4" },
+      { label: "Georgia Tech Sustainability Next Plan", href: "https://sustain.gatech.edu/sustainability-next-plan/" },
+      { label: "Georgia Tech Strategic Plan", href: "https://strategicplan.gatech.edu/" }
+    ],
+    reflection: {
+      prompt: "Your turn: what helped you most on the way to Georgia Tech?",
+      options: [
+        {
+          label: "A teacher who pushed me",
+          reply: "Many Atlanta kids lose that teacher every summer, when reading skills slide. Horizons Atlanta fills those months with free summer learning, including a program on our campus.",
+          orgId: "horizons-atlanta"
+        },
+        {
+          label: "A computer and internet at home",
+          reply: "About 1 in 12 Atlanta households has no home broadband. Inspiredu gets laptops to families and teaches them to use them, with volunteers running workshops and refurbishing computers.",
+          orgId: "inspiredu-atl"
+        },
+        {
+          label: "An adult who kept showing up",
+          reply: "A mentor who reads with a child and shows up twice a month can change what that child expects of school. Big Brothers Big Sisters matches you to do exactly that.",
+          orgId: "bbbs-atlanta"
+        },
+        {
+          label: "Knowing someone who went to college",
+          reply: "For a kid who has never met a college student, you are proof that it is possible. Buddy Jackets brings Tech students and local children together all year.",
+          orgId: "buddy-jackets"
+        }
+      ]
+    }
+  },
+
+  context: {
+    heading: "Two miles, two different schools",
+    intro: "Each dot is an Atlanta public school, colored by the share of students reading at grade level. The dashed circle is two miles from Tech Tower, about a ten-minute bike ride. Tap a dot: how far is it from where you sit?",
+    source: "Georgia Milestones 2023–24 English Language Arts, Georgia Governor’s Office of Education and Workforce Strategy. School locations: National Center for Education Statistics.",
+    sourceUrl: "https://goews.georgia.gov/dashboards-data-report-card/downloadable-data",
+    chart: {
+      heading: "Is this just how big cities are?",
+      prompt: "Fourth graders from low-income families score lower in reading almost everywhere. Before you see Atlanta, make a call: is its gap smaller or bigger than the nation’s?",
+      reveal: "Atlanta’s gap is 60 points, more than twice the national gap of 27. That is the gap ATLearn is asking you to help close.",
+      lowLabel: "Students from low-income families",
+      highLabel: "Their classmates",
+      rows: [
+        { label: "United States (public schools)", low: 202.0, high: 229.2, gap: 27 },
+        { label: "Large U.S. cities", low: 199.2, high: 229.1, gap: 30 },
+        { label: "Georgia", low: 205.9, high: 237.7, gap: 32 },
+        { label: "Atlanta Public Schools", low: 195.4, high: 255.5, gap: 60, highlight: true }
+      ],
+      source: "The Nation’s Report Card (NAEP), 2024 grade 4 reading, average scale scores",
+      sourceUrl: "https://www.nationsreportcard.gov/reports/reading/2024/g4_8/performance-by-student-group/?grade=4"
+    }
   },
 
   video: {
     heading: "Watch",
     title: "Inclusive Education – Education Equity Now",
     url: "https://www.youtube.com/watch?v=8HPh4RoV63s",
+    prompt: "As you watch, ask yourself: which of these barriers have you never had to think about?",
     caption: "",
     transcript: ""
   },
 
   organizations: {
     heading: "Four organizations doing the work",
-    intro: "[Introduce the four organizations. Say what they have in common and how a reader should choose among them.]",
+    intro: "Each group needs something different from you. Which sounds most like you: a summer of teaching, an afternoon with laptops, a year as one kid’s mentor, or a semester with other Tech students? Not sure yet? The quiz below will help you choose.",
     items: [
       {
         id: "horizons-atlanta",
         name: "Horizons Atlanta",
         tagline: "Independent Atlanta Nonprofit",
-        about: "Horizons Atlanta is a non-profit organization that offers free summer learning and academic assistance to students from disadvantaged communities. The organization concentrates on literacy, STEM education, enrichment, and personal growth. Individuals interested in volunteering and partnering with Horizons Atlanta are encouraged to find out more.",
-        why: "Horizons Atlanta is important for Georgia Tech students in that it strives to foster education equity in Atlanta and has a program at the Georgia Tech campus. Students who are interested in education, technology, and community outreach can investigate how to help out the kids around here.",
+        about: "Horizons Atlanta is a non-profit organization that offers free summer learning and academic assistance to students from disadvantaged communities. The organization concentrates on literacy, STEM education, enrichment, and personal growth.",
+        why: "Horizons runs a summer program on the Georgia Tech campus, so students interested in education, technology, or outreach can help kids from the neighborhoods around us.",
         involve: "Visit the Horizons Atlanta website to explore volunteer opportunities and learn how to support educational programs for underserved students.",
         href: "https://www.horizonsatlanta.org/",
         hrefLabel: "Visit the organization",
+        image: "images/org-horizons.jpg",
+        imageAlt: "A Horizons Atlanta volunteer teaching a student to play bass guitar in a classroom",
+        imageCredit: "Photo: Horizons Atlanta",
         tags: ["UN SDG 4: Quality Education", "Education for Sustainable Development"]
       },
       {
@@ -100,32 +196,42 @@ window.SITE = {
         name: "Inspiredu",
         tagline: "Atlanta Community Nonprofit",
         about: "Inspiredu attempts to reduce the digital divide through supplying underserved communities with computers, teaching digital literacy and computer technology. Volunteer opportunities include working as a facilitator for a digital literacy workshop or preparing and refurbishing laptops.",
-        why: "Inspiredu is very applicable to Georgia Tech students since it combines technology, education, and community service. This means that students can use their technology expertise to assist families in gaining access to online materials.",
+        why: "Inspiredu combines technology, education, and service, so Georgia Tech students can put their tech skills to work helping families get online.",
         involve: "Check out Inspiredu’s website for digital literacy and technology related volunteering opportunities.",
         href: "https://www.iuatl.org/",
         hrefLabel: "Visit the organization",
+        image: "images/org-inspiredu.jpg",
+        imageAlt: "Inspiredu volunteers working together at a laptop",
+        imageCredit: "Photo: Inspiredu",
         tags: ["UN SDG 4: Quality Education", "Education for Sustainable Development"]
       },
       {
         id: "bbbs-atlanta",
         name: "Big Brothers Big Sisters of Metro Atlanta",
         tagline: "Atlanta Youth Mentoring Nonprofit",
-        about: "Big Brothers Big Sisters of Metro Atlanta is a nonprofit organization that connects children and teens with adult volunteer mentors. The organization supports one-to-one relationships that help young people build confidence and explore their interests. Mentors and youth spend time together through activities such as reading, visiting the library, and exploring the community.",
-        why: "Big Brothers Big Sisters is relevant to Georgia Tech students since it combines mentoring, learning, and community service. Students who are interested in working with young people can share their experiences with education and college while becoming a consistent source of encouragement for a child in metro Atlanta.",
+        about: "Big Brothers Big Sisters of Metro Atlanta is a nonprofit organization that connects children and teens with adult volunteer mentors. Mentors and youth spend time together reading, visiting the library, and exploring the community, building confidence along the way.",
+        why: "Students who enjoy working with young people can share their own path to college and become a consistent source of encouragement for one child in metro Atlanta.",
         involve: "Visit the organization’s website to review mentor requirements and sign up for a Big Orientation. Volunteers commit to meeting with their mentee at least twice a month for at least one year.",
         href: "https://bbbsatl.org/be-a-big/",
         hrefLabel: "Visit the organization",
+        image: "images/org-bbbs.jpg",
+        imageAlt: "A Big Brothers Big Sisters mentor and his mentee laughing together on a front porch",
+        imageCredit: "Photo: Big Brothers Big Sisters of Metro Atlanta",
         tags: ["UN SDG 4: Quality Education", "Education for Sustainable Development"]
       },
       {
         id: "buddy-jackets",
         name: "Buddy Jackets",
         tagline: "Georgia Tech Student Service Organization",
-        about: "Buddy Jackets is a student organization at Georgia Tech that connects students with children in the surrounding Atlanta community through mentoring, volunteering, and events. The organization promotes higher education and builds relationships between college students and local youth. Its community service opportunities include volunteering at the Agape Youth and Family Center.",
-        why: "Buddy Jackets is relevant to Georgia Tech students since it combines education, mentorship, and community service through a campus organization. Students interested in working with children can share their experiences with college, encourage an interest in learning, and build connections with other Tech students who want to support the Atlanta community.",
-        involve: "Visit Buddy Jackets’ Georgia Tech organization page to learn more and contact the group about current membership and volunteer opportunities. Ask how to take part in mentoring, community events, and service activities during the semester.",
+        about: "Buddy Jackets is a Georgia Tech student organization that connects students with children in the surrounding Atlanta community through mentoring, volunteering, and events, including service at the Agape Youth and Family Center. It promotes higher education to local youth.",
+        why: "Because it is a campus organization, you can mentor children, share what college is like, and serve Atlanta alongside other Tech students.",
+        involve: "Visit Buddy Jackets’ Georgia Tech organization page to learn more and contact the group about current membership and volunteer opportunities.",
         href: "https://gatech.campuslabs.com/engage/organization/buddy-jackets",
         hrefLabel: "Visit the organization",
+        image: "images/org-buddy-jackets.jpg",
+        imageAlt: "Buddy Jackets logo",
+        imageFit: "contain",
+        imageCredit: "Logo: Buddy Jackets",
         tags: ["UN SDG 4: Quality Education", "Education for Sustainable Development"]
       }
     ]
@@ -232,14 +338,14 @@ window.SITE = {
       },
       "inspiredu-atl": {
         title: "Inspiredu fits how you want to help.",
-        body: "Your answers point to the technology side of the gap: computers, workshops, and families shut out of homework and training. Digital Skills Volunteers support Inspiredu workshops, in person or online. Tech Team volunteers clean and reimage the laptops those programs give out. Open the volunteer page and pick the role that matches the hour you have.",
+        body: "Your answers point to the technology side of the gap: computers and workshops. Digital Skills Volunteers support Inspiredu workshops, in person or online. Tech Team volunteers clean and reimage the laptops those programs give out. Open the volunteer page and pick the role that matches the hour you have.",
         links: [
           { label: "See Inspiredu volunteer roles", href: "https://www.iuatl.org/volunteer" }
         ]
       },
       "bbbs-atlanta": {
         title: "Big Brothers Big Sisters of Metro Atlanta fits how you want to help.",
-        body: "Your answers point to a one-to-one relationship: the same young person, at least twice a month, for at least a year. Big Brothers Big Sisters matches children and teens with mentors who read, visit the library, and spend time in the community. Review the mentor requirements and sign up for a Big Orientation. Tell them you are a Georgia Tech student.",
+        body: "Your answers point to a one-to-one relationship: the same young person, at least twice a month, for at least a year. Big Brothers Big Sisters matches children and teens with mentors who read, visit the library, and spend time in the community. Review the mentor requirements and sign up for a Big Orientation.",
         links: [
           { label: "Become a Big", href: "https://bbbsatl.org/be-a-big/" }
         ]
@@ -252,13 +358,13 @@ window.SITE = {
         ]
       },
       tie: {
-        body: "Your answers landed evenly, so more than one organization fits. Each link below is a different kind of help. Contact the group you can reach this week, and save the others for after that first step is on your calendar. Only 35.7 percent of Atlanta Public Schools students in grades 3–8 scored proficient or above in English."
+        body: "Your answers landed evenly, so more than one organization fits. Contact the group you can reach this week, and save the others for later."
       }
     }
   },
 
   footer: {
-    close: "Join ATLearn in opening doors to education across Atlanta: teach, mentor, or volunteer.",
+    close: "One hour a week can open a door next door. Which one will you open?",
     credits: "Alexandra, Ali, Owen, Siva, and Srija. LMC 3403, Fall 2026.",
     note: "Student campaign for the Georgia Tech community. This page is not an official Georgia Tech site."
   }
