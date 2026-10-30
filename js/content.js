@@ -228,9 +228,8 @@ window.SITE = {
         href: "https://gatech.campuslabs.com/engage/organization/buddy-jackets",
         hrefLabel: "Explore Buddy Jackets",
         image: "images/org-buddy-jackets.jpg",
-        imageAlt: "Buddy Jackets logo",
-        imageFit: "contain",
-        imageCredit: "Logo: Buddy Jackets",
+        imageAlt: "A Buddy Jackets volunteer and a child smiling while making paper-plate crafts",
+        imageCredit: "Photo: Buddy Jackets",
         tags: ["UN SDG 4: Quality Education", "Education for Sustainable Development"]
       }
     ]
