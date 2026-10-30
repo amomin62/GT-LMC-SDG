@@ -51,8 +51,9 @@ window.SITE = {
 
   issue: {
     heading: "Start with a guess",
+    contextHeading: "The gap is closer than you think",
     guess: {
-      prompt: "Before you read on: out of every 10 students in Atlanta Public Schools, grades 3–8, how many do you think read and write at grade level?",
+      prompt: "Out of every 10 students in Atlanta Public Schools, grades 3–8, how many do you think read and write at grade level?",
       answer: 3.57,
       reveal: "35.7% of Atlanta Public Schools students in grades 3–8 scored proficient or above in English Language Arts.",
       high: "You guessed {n}. The real answer is fewer than 4. From campus, it is easy to picture the schools we went to.",
@@ -64,6 +65,8 @@ window.SITE = {
     story: {
       kicker: "Behind the number",
       title: "Meet Michael, a third grader about three miles from campus",
+      image: "images/michael-crowder.jpg",
+      imageAlt: "Michael Crowder reading a book at an after-school literacy program.",
       paragraphs: [
         "Michael Crowder stands at the front of his third-grade classroom, his mustard-yellow polo buttoned to the top. “Give us some vowels,” his teacher says. His eyes search the chart, but he doesn’t land on an answer.",
         "Michael missed most of first grade. It was the first fall of the pandemic, and for months Atlanta held school only online. His mom had just had a baby, and their small apartment had no quiet place to learn. By the end of first grade he knew two sight words, “a” and “the.” First graders are expected to know 200.",
@@ -109,14 +112,14 @@ window.SITE = {
     nextPlan: [
       { name: "Education for Sustainable Development", href: "https://sustain.gatech.edu/sustainability-next-plan/" }
     ],
-    connection: "SDG 4 asks the world to “ensure inclusive and equitable quality education and promote lifelong learning opportunities for all.” Georgia Tech’s Sustainability Next Plan makes Education for Sustainable Development one of its six priorities, and the Strategic Plan commits the Institute to being “an anchor institution, partner, and catalyst of sustainable development in our city.” Our answer: tutor, mentor, or teach next door.",
+    connection: "Tutoring, mentoring, and digital access put UN Sustainable Development Goal 4, Quality Education, into practice. ATLearn connects that goal with Georgia Tech’s Education for Sustainable Development priority and its commitment to serving Atlanta.",
     links: [
       { label: "UN Sustainable Development Goal 4", href: "https://sdgs.un.org/goals/goal4" },
       { label: "Georgia Tech Sustainability Next Plan", href: "https://sustain.gatech.edu/sustainability-next-plan/" },
       { label: "Georgia Tech Strategic Plan", href: "https://strategicplan.gatech.edu/" }
     ],
     reflection: {
-      prompt: "Your turn: what helped you most on the way to Georgia Tech?",
+      prompt: "What helped you most on the way to Georgia Tech?",
       options: [
         {
           label: "A teacher who pushed me",
@@ -144,7 +147,7 @@ window.SITE = {
 
   context: {
     heading: "Two miles, two different schools",
-    intro: "Each dot is an Atlanta public school, colored by the share of students reading at grade level. The dashed circle is two miles from Tech Tower, about a ten-minute bike ride. Tap a dot: how far is it from where you sit?",
+    intro: "Each dot is an Atlanta public school, colored by the share of students reading at grade level. Tap a dot to explore a school near campus.",
     source: "Georgia Milestones 2023–24 English Language Arts, Georgia Governor’s Office of Education and Workforce Strategy. School locations: National Center for Education Statistics.",
     sourceUrl: "https://goews.georgia.gov/dashboards-data-report-card/downloadable-data",
     chart: {
@@ -174,18 +177,17 @@ window.SITE = {
   },
 
   organizations: {
-    heading: "Four organizations doing the work",
-    intro: "Each group needs something different from you. Which sounds most like you: a summer of teaching, an afternoon with laptops, a year as one kid’s mentor, or a semester with other Tech students? Not sure yet? The quiz below will help you choose.",
+    heading: "Find a place to help",
+    intro: "Teach, share your tech skills, or mentor a young person. Choose a group below, or take the quiz to find your fit.",
     items: [
       {
         id: "horizons-atlanta",
         name: "Horizons Atlanta",
-        tagline: "Independent Atlanta Nonprofit",
-        about: "Horizons Atlanta is a non-profit organization that offers free summer learning and academic assistance to students from disadvantaged communities. The organization concentrates on literacy, STEM education, enrichment, and personal growth.",
-        why: "Horizons runs a summer program on the Georgia Tech campus, so students interested in education, technology, or outreach can help kids from the neighborhoods around us.",
-        involve: "Visit the Horizons Atlanta website to explore volunteer opportunities and learn how to support educational programs for underserved students.",
+        tagline: "Summer learning",
+        about: "Horizons Atlanta offers free summer programs in literacy, STEM, and enrichment, including one on Georgia Tech’s campus.",
+        involve: "Help local students keep learning while school is out. Explore the program’s volunteer opportunities.",
         href: "https://www.horizonsatlanta.org/",
-        hrefLabel: "Visit the organization",
+        hrefLabel: "Explore Horizons Atlanta",
         image: "images/org-horizons.jpg",
         imageAlt: "A Horizons Atlanta volunteer teaching a student to play bass guitar in a classroom",
         imageCredit: "Photo: Horizons Atlanta",
@@ -194,12 +196,11 @@ window.SITE = {
       {
         id: "inspiredu-atl",
         name: "Inspiredu",
-        tagline: "Atlanta Community Nonprofit",
-        about: "Inspiredu attempts to reduce the digital divide through supplying underserved communities with computers, teaching digital literacy and computer technology. Volunteer opportunities include working as a facilitator for a digital literacy workshop or preparing and refurbishing laptops.",
-        why: "Inspiredu combines technology, education, and service, so Georgia Tech students can put their tech skills to work helping families get online.",
-        involve: "Check out Inspiredu’s website for digital literacy and technology related volunteering opportunities.",
+        tagline: "Digital access and skills",
+        about: "Inspiredu provides computers and digital skills training to help Atlanta families get online.",
+        involve: "Put your tech skills to work by refurbishing laptops or supporting a digital literacy workshop.",
         href: "https://www.iuatl.org/",
-        hrefLabel: "Visit the organization",
+        hrefLabel: "Explore Inspiredu",
         image: "images/org-inspiredu.jpg",
         imageAlt: "Inspiredu volunteers working together at a laptop",
         imageCredit: "Photo: Inspiredu",
@@ -208,12 +209,11 @@ window.SITE = {
       {
         id: "bbbs-atlanta",
         name: "Big Brothers Big Sisters of Metro Atlanta",
-        tagline: "Atlanta Youth Mentoring Nonprofit",
-        about: "Big Brothers Big Sisters of Metro Atlanta is a nonprofit organization that connects children and teens with adult volunteer mentors. Mentors and youth spend time together reading, visiting the library, and exploring the community, building confidence along the way.",
-        why: "Students who enjoy working with young people can share their own path to college and become a consistent source of encouragement for one child in metro Atlanta.",
-        involve: "Visit the organization’s website to review mentor requirements and sign up for a Big Orientation. Volunteers commit to meeting with their mentee at least twice a month for at least one year.",
+        tagline: "One-to-one mentoring",
+        about: "Big Brothers Big Sisters pairs you with a young person to read, explore the community, and build a lasting connection.",
+        involve: "Meet at least twice a month for one year. Review mentor requirements and start with a Big Orientation.",
         href: "https://bbbsatl.org/be-a-big/",
-        hrefLabel: "Visit the organization",
+        hrefLabel: "Review mentor requirements",
         image: "images/org-bbbs.jpg",
         imageAlt: "A Big Brothers Big Sisters mentor and his mentee laughing together on a front porch",
         imageCredit: "Photo: Big Brothers Big Sisters of Metro Atlanta",
@@ -222,12 +222,11 @@ window.SITE = {
       {
         id: "buddy-jackets",
         name: "Buddy Jackets",
-        tagline: "Georgia Tech Student Service Organization",
-        about: "Buddy Jackets is a Georgia Tech student organization that connects students with children in the surrounding Atlanta community through mentoring, volunteering, and events, including service at the Agape Youth and Family Center. It promotes higher education to local youth.",
-        why: "Because it is a campus organization, you can mentor children, share what college is like, and serve Atlanta alongside other Tech students.",
-        involve: "Visit Buddy Jackets’ Georgia Tech organization page to learn more and contact the group about current membership and volunteer opportunities.",
+        tagline: "Service with fellow Tech students",
+        about: "Buddy Jackets brings Georgia Tech students together to mentor Atlanta children, including through service at the Agape Youth and Family Center.",
+        involve: "Contact the campus group about joining its mentoring and service activities this semester.",
         href: "https://gatech.campuslabs.com/engage/organization/buddy-jackets",
-        hrefLabel: "Visit the organization",
+        hrefLabel: "Explore Buddy Jackets",
         image: "images/org-buddy-jackets.jpg",
         imageAlt: "Buddy Jackets logo",
         imageFit: "contain",
@@ -239,7 +238,7 @@ window.SITE = {
 
   interactive: {
     heading: "Find your fit",
-    intro: "Answer four questions about how you want to help. You will get a match among Horizons Atlanta, Inspiredu, Big Brothers Big Sisters of Metro Atlanta, and Buddy Jackets, plus a page where a Georgia Tech student can get involved.",
+    intro: "Answer four questions to find an organization that fits your interests and availability.",
     restartLabel: "Retake the quiz",
     questions: [
       {

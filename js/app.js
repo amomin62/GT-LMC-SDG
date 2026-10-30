@@ -32,7 +32,7 @@
     banner(),
     header(),
     hero(),
-    `<main id="content">${issueSection()}${contextSection()}${videoSection()}${orgSection()}${interactiveSection()}</main>`,
+    `<main id="content">${issueSection()}${contextSection()}${videoSection()}${orgSection()}${interactiveSection()}${campaignContext()}</main>`,
     footer()
   ].join("");
 
@@ -40,8 +40,11 @@
   renderQuiz(false);
   initMap();
   document.addEventListener("click", onClick);
+  document.addEventListener("change", (event) => {
+    if (event.target.id === "school-select" && event.target.value) focusSchool(event.target.value);
+  });
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeMenu();
+    if (event.key === "Escape" && document.querySelector(".site-header.is-open")) closeMenu(true);
   });
 
   function banner() {
@@ -90,9 +93,8 @@
             <p class="lede">${esc(campaign.lede)}</p>
             <div class="hero-actions">
               <a class="btn btn-gold" href="#guess">${esc(campaign.primaryCta || "Start here")}</a>
-              <a class="btn btn-ghost" href="#map">${esc(campaign.secondaryCta || "See the map")}</a>
+              <a class="btn btn-ghost" href="#fit">Find my volunteer match</a>
             </div>
-            <p class="chip">For: ${esc(campaign.audience)}</p>
           </div>
           <aside class="hero-panel">
             <p class="kicker">Speaking as</p>
@@ -112,15 +114,6 @@
         <span>${esc(stat.label)}</span>
         <p class="source">${sourceLink(stat.source, stat.sourceUrl)}</p>
       </article>`).join("");
-    const sdgs = (issue.sdgs || []).map((sdg) => goalTag("goal", "SDG " + sdg.number, sdg.name, sdg.href)).join("");
-    const next = (issue.nextPlan || [])
-      .map((item) => (typeof item === "string" ? { name: item } : item))
-      .map((item) => goalTag("goal goal-next", "Sustainability Next", item.name, item.href))
-      .join("");
-    const links = (issue.links || []).map((link) => {
-      const href = safeUrl(link.href);
-      return href ? `<li><a href="${esc(href)}" target="_blank" rel="noopener">${esc(link.label)}</a></li>` : "";
-    }).join("");
 
     return `
       <section class="section" id="issue">
@@ -128,14 +121,9 @@
           ${sectionHead("01", issue.heading)}
           ${guessHtml(issue.guess)}
           ${storyHtml(issue.story)}
-          <div class="issue-grid">
-            <div class="issue-copy">${paragraphs(issue.paragraphs)}</div>
-            <aside class="fit-box">
-              <p class="kicker">Where this fits</p>
-              <div class="goals">${sdgs}${next}</div>
-              <p>${esc(issue.connection)}</p>
-              ${links ? `<ul class="read-more">${links}</ul>` : ""}
-            </aside>
+          <div class="issue-copy">
+            <h3>${esc(issue.contextHeading)}</h3>
+            ${paragraphs(issue.paragraphs)}
           </div>
           <div class="stat-grid">${stats}</div>
           ${reflectionHtml(issue.reflection)}
@@ -143,12 +131,21 @@
       </section>`;
   }
 
-  function goalTag(className, label, name, href) {
-    const url = safeUrl(href);
-    const inner = `<b>${esc(label)}</b> ${esc(name)}`;
-    return url
-      ? `<a class="${className}" href="${esc(url)}" target="_blank" rel="noopener">${inner}</a>`
-      : `<span class="${className}">${inner}</span>`;
+  function campaignContext() {
+    const links = (site.issue.links || []).map((link) => {
+      const href = safeUrl(link.href);
+      return href ? `<li><a href="${esc(href)}" target="_blank" rel="noopener">${esc(link.label)} <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a></li>` : "";
+    }).join("");
+    return `
+      <aside class="campaign-context" aria-labelledby="campaign-context-title">
+        <div class="wrap context-inner">
+          <div>
+            <h2 id="campaign-context-title">Education is part of a sustainable Atlanta.</h2>
+            <p>${esc(site.issue.connection)}</p>
+          </div>
+          <ul class="context-resources" aria-label="Campaign background and sources">${links}</ul>
+        </div>
+      </aside>`;
   }
 
   function guessHtml(guess) {
@@ -192,6 +189,11 @@
 
   function storyHtml(story) {
     if (!story) return "";
+    const photo = safeUrl(story.image);
+    const portrait = photo ? `
+      <figure class="story-photo">
+        <img src="${esc(photo)}" alt="${esc(story.imageAlt || "")}" width="3000" height="2000" loading="lazy">
+      </figure>` : "";
     const school = schools.find(([name]) => name === story.school);
     const schoolBox = school ? `
       <div class="story-school">
@@ -208,6 +210,7 @@
           <p class="source">${sourceLink(story.source, story.sourceUrl)}</p>
         </div>
         <aside class="story-side">
+          ${portrait}
           ${story.quote ? `<blockquote><p>“${esc(story.quote)}”</p><cite>${esc(story.quoteBy)}</cite></blockquote>` : ""}
           ${schoolBox}
         </aside>
@@ -248,10 +251,13 @@
       <button type="button" class="map-filter" data-action="map-filter" data-band="${band.id}" aria-pressed="${index === 0}">
         ${band.color ? `<i style="background:${band.color}"></i>` : ""}${esc(band.label)}
       </button>`).join("");
+    const schoolOptions = [...schools].sort((a, b) => a[0].localeCompare(b[0])).map(([name, , , pct]) =>
+      `<option value="${esc(name)}">${esc(name)} · ${pct.toFixed(1)}%</option>`).join("");
     return `
       <section class="section" id="map">
         <div class="wrap">
           ${sectionHead("02", context.heading)}
+          <p class="data-note">School data: 2023–24 English Language Arts</p>
           <p class="section-intro">${esc(context.intro)}</p>
           <div class="map-layout">
             <div class="map-frame">
@@ -260,6 +266,11 @@
             <aside class="map-panel">
               <p class="kicker">Share of students reading at grade level</p>
               <div class="map-filters" role="group" aria-label="Show schools by reading level">${filters}</div>
+              <label class="school-select-label" for="school-select">Choose a school</label>
+              <select id="school-select" aria-describedby="school-select-hint">
+                <option value="">Select a school to see its details</option>${schoolOptions}
+              </select>
+              <p class="map-hint" id="school-select-hint">Use this list to explore every school without selecting a map dot. Selecting a school shows all map markers.</p>
               <div class="map-info" aria-live="polite">${mapSummaryHtml()}</div>
             </aside>
           </div>
@@ -302,7 +313,7 @@
     schoolMap = L.map(el, { scrollWheelZoom: false });
     const esri = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/";
     L.tileLayer(esri + "World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
-      attribution: "Tiles &copy; Esri &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap contributors",
+      attribution: "Tiles &copy; Esri; Esri, HERE, Garmin, &copy; OpenStreetMap contributors",
       maxZoom: 16
     }).addTo(schoolMap);
     L.tileLayer(esri + "World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}", { maxZoom: 16 }).addTo(schoolMap);
@@ -356,6 +367,8 @@
     const school = schools.find(([schoolName]) => schoolName === name);
     if (!school) return;
     const [, lat, lon, pct] = school;
+    const select = document.getElementById("school-select");
+    if (select) select.value = name;
     filterMap("all");
     const info = document.querySelector(".map-info");
     if (info) info.innerHTML = schoolInfoHtml(name, pct, milesFromTech(lat, lon));
@@ -387,13 +400,14 @@
     const rows = chart.rows.map((row) => `
       <div class="chart-row${row.highlight ? " is-atl is-mystery" : ""}">
         <span class="chart-label">${esc(row.label)}</span>
-        <div class="chart-track">
+        <span class="sr-only chart-summary"${row.highlight ? " hidden" : ""}>Students from low-income families: ${Math.round(row.low)}. Their classmates: ${Math.round(row.high)}. Gap: ${esc(row.gap)} points.</span>
+        <div class="chart-track" aria-hidden="true">
           <span class="chart-line" style="left:${pos(row.low)}%;width:${pos(row.high) - pos(row.low)}%"></span>
           <span class="chart-dot dot-low" style="left:${pos(row.low)}%" title="${Math.round(row.low)}"></span>
           <span class="chart-dot dot-high" style="left:${pos(row.high)}%" title="${Math.round(row.high)}"></span>
           <span class="chart-mystery" aria-hidden="true">?</span>
         </div>
-        <span class="chart-gap">${esc(row.gap)} points</span>
+        <span class="chart-gap" aria-hidden="true">${esc(row.gap)} points</span>
       </div>`).join("");
     const choices = [["smaller", "Smaller"], ["same", "About the same"], ["bigger", "Bigger"]].map(([id, label]) => `
       <button type="button" class="reflect-option" data-action="chart-guess" data-choice="${id}" aria-pressed="false">${label}</button>`).join("");
@@ -407,6 +421,7 @@
           <span><i class="dot-low"></i>${esc(chart.lowLabel)}</span>
           <span><i class="dot-high"></i>${esc(chart.highLabel)}</span>
         </div>
+        <p class="source">Average reading scale scores, not percentages. Choose an answer above to reveal Atlanta’s gap.</p>
         <div class="chart-rows">${rows}</div>
         <div class="chart-reply" aria-live="polite" hidden></div>
         <p class="source">${sourceLink(chart.source, chart.sourceUrl)}</p>
@@ -418,7 +433,10 @@
     document.querySelectorAll("[data-action='chart-guess']").forEach((button) => {
       button.setAttribute("aria-pressed", String(button.dataset.choice === choice));
     });
-    document.querySelectorAll(".chart-row.is-mystery").forEach((row) => row.classList.remove("is-mystery"));
+    document.querySelectorAll(".chart-row.is-mystery").forEach((row) => {
+      row.classList.remove("is-mystery");
+      row.querySelector(".chart-summary").hidden = false;
+    });
     const reply = document.querySelector(".chart-reply");
     if (!reply) return;
     reply.hidden = false;
@@ -450,7 +468,7 @@
   function videoPlayer(video) {
     const source = videoSource(video.url);
     if (source.type === "embed") {
-      return `<iframe src="${esc(source.src)}" title="${esc(plain(video.title))}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+      return `<iframe src="${esc(source.src)}" title="${esc(plain(video.title))}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
     }
     if (source.type === "file") {
       return `<video controls preload="metadata" src="${esc(source.src)}"></video>`;
@@ -481,38 +499,28 @@
   function orgCard(org, index) {
     const href = safeUrl(org.href);
     const link = href
-      ? `<a class="btn btn-navy" href="${esc(href)}" target="_blank" rel="noopener">${esc(org.hrefLabel || "Visit")}</a>`
+      ? `<a class="btn btn-navy" href="${esc(href)}" target="_blank" rel="noopener">${esc(org.hrefLabel || "Visit")} <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a>`
       : `<button class="btn btn-line" type="button" disabled>${esc(org.hrefLabel || "Add a link")}</button>`;
-    const tags = (org.tags || []).map((tag) => `<span class="tag">${esc(tag)}</span>`).join("");
     const image = safeUrl(org.image);
     const photo = image ? `
         <figure class="org-photo${org.imageFit === "contain" ? " is-logo" : ""}">
           <img src="${esc(image)}" alt="${esc(org.imageAlt || "")}" loading="lazy">
           ${org.imageCredit ? `<figcaption>${esc(org.imageCredit)}</figcaption>` : ""}
         </figure>` : "";
-    const name = href
-      ? `<a href="${esc(href)}" target="_blank" rel="noopener">${esc(org.name)}</a>`
-      : esc(org.name);
-    const siteLink = href ? `<p class="org-site"><a href="${esc(href)}" target="_blank" rel="noopener">${esc(hostName(href))}</a></p>` : "";
     return `
       <article class="org" id="${esc(org.id)}">
         ${photo}
         <div class="org-top">
           <span class="org-num">${String(index + 1).padStart(2, "0")}</span>
           <div>
-            <h3>${name}</h3>
+            <h3>${esc(org.name)}</h3>
             <p class="tagline">${esc(org.tagline)}</p>
-            ${siteLink}
           </div>
         </div>
         <p>${esc(org.about)}</p>
-        <p class="label">Why it matters to you</p>
-        <p>${esc(org.why)}</p>
-        <p class="label">How to get involved</p>
-        <p>${esc(org.involve)}</p>
+        <p class="org-involve">${esc(org.involve)}</p>
         <div class="org-foot">
           ${link}
-          <div class="tags">${tags}</div>
         </div>
       </article>`;
   }
@@ -707,6 +715,11 @@
     if (action === "map-reset") {
       const info = document.querySelector(".map-info");
       if (info) info.innerHTML = mapSummaryHtml();
+      const select = document.getElementById("school-select");
+      if (select) {
+        select.value = "";
+        select.focus();
+      }
       return;
     }
 
@@ -770,11 +783,12 @@
     });
   }
 
-  function closeMenu() {
+  function closeMenu(restoreFocus = false) {
     const header = document.querySelector(".site-header");
     const menuBtn = document.querySelector(".menu-btn");
     if (header) header.classList.remove("is-open");
     if (menuBtn) menuBtn.setAttribute("aria-expanded", "false");
+    if (restoreFocus && menuBtn) menuBtn.focus();
   }
 
   function videoSource(url) {
@@ -806,14 +820,6 @@
       return { type: "embed", src: "https://drive.google.com/file/d/" + encodeURIComponent(parts[2]) + "/preview" };
     }
     return { type: "link", src: value };
-  }
-
-  function hostName(url) {
-    try {
-      return new URL(url).hostname.replace(/^www\./, "");
-    } catch (error) {
-      return url;
-    }
   }
 
   function plain(value) {
